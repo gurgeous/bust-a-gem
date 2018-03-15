@@ -1,22 +1,42 @@
 {
   "name": "bust-a-gem",
   "displayName": "Bust A Gem",
+  "license": "MIT",
   "description": "",
   "version": "0.0.1",
   "publisher": "gurgeous",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gurgeous/bust-a-gem.git"
+  },
   "engines": {
     "vscode": "^1.21.0"
   },
   "categories": ["Other"],
   "activationEvents": ["onCommand:extension.openGem"],
-  "main": "./extension",
+  "main": "./src/extension",
   "contributes": {
     "commands": [
       {
         "command": "extension.openGem",
         "title": "Bust-A-Gem: Open Gem..."
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Bust-A-Gem settings",
+      "properties": {
+        "bustagem.bundle": {
+          "type": "string",
+          "default": "bundle show --paths",
+          "description": "Bundler command to list gem paths."
+        },
+        "bustagem.gem": {
+          "type": "string",
+          "default": "gem env gemdir",
+          "description": "Gem command to find gems."
+        }
+      }
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
