@@ -23,27 +23,6 @@ const findFileUp = (dir, filename) => {
 module.exports.findFileUp = findFileUp;
 
 //
-// Present list of dirs as quick picks, then open that folder in vscode.
-//
-
-const quickPickDirs = dirs => {
-  // parse list of dirs into QuickPickItems
-  const items = dirs.map(dir => {
-    return { label: path.basename(dir), dir };
-  });
-
-  vscode.window.showQuickPick(items).then(selection => {
-    if (!selection) {
-      return;
-    }
-
-    const uri = vscode.Uri.file(selection.dir);
-    vscode.commands.executeCommand('vscode.openFolder', uri);
-  });
-};
-module.exports.quickPickDirs = quickPickDirs;
-
-//
 // Find root dir for current project or file.
 //
 

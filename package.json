@@ -12,8 +12,13 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "categories": ["Other"],
-  "activationEvents": ["onCommand:extension.openGem"],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.openGem",
+    "onLanguage:ruby"
+  ],
   "main": "./src/extension",
   "contributes": {
     "commands": [
