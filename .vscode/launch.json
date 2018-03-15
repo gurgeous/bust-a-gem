@@ -10,7 +10,11 @@
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": ["/Users/amd/banter", "--extensionDevelopmentPath=${workspaceFolder}"]
+      "args": [
+        "/Users/amd/banter",
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}"
+      ]
     },
     {
       "name": "Extension Tests",
