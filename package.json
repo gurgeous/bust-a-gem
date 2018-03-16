@@ -33,7 +33,12 @@
         "bustagem.gem": {
           "type": "string",
           "default": "gem env gemdir",
-          "description": "Gem command to find gems."
+          "description": "Command to locate gem directory."
+        },
+        "bustagem.rip": {
+          "type": "string",
+          "default": "ripper-tags -f TAGS -R",
+          "description": "Command to create TAGS File."
         }
       }
     }

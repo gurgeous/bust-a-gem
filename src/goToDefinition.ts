@@ -4,8 +4,21 @@ import * as path from 'path';
 import * as util from './util';
 import * as vscode from 'vscode';
 
+// TODO
 //
-// main command
+// config for gems to index
+// turn gem names into gem dirs
+// status bar status
+// great error handling (ripper-tags, bad gem names, escaping, etc.)
+// reload
+// README
+// release
+
+// state
+let data: etags.Etags;
+
+//
+// main command, wraps helper with try/catch
 //
 
 const provideDefinition = async (
@@ -20,56 +33,67 @@ const provideDefinition = async (
   }
 };
 
+const goToDefinition: vscode.DefinitionProvider = { provideDefinition };
+export default goToDefinition;
+
+//
+// helper that can throw exceptions
+//
+
 const provideDefinition0 = async (
   document: vscode.TextDocument,
   position: vscode.Position
 ): Promise<vscode.Definition> => {
-  //
-  // find TAGS file
-  //
+  // where is the TAGS file?
+  const tagsFile = findTagsFile();
 
-  const root = util.rootDir();
-  const gemfile = util.findFileUp(root, 'Gemfile');
-  if (!gemfile) {
-    throw new Error('Go To Definition only works if you have a Gemfile in your project.');
+  // create/load if necessary
+  if (!data || data.file !== tagsFile) {
+    if (!fs.existsSync(tagsFile)) {
+      await createTagsFile(tagsFile);
+    }
+    data = await etags.load(tagsFile);
   }
 
-  const tagsFile = path.join(path.dirname(gemfile), 'TAGS');
-  if (!fs.existsSync(tagsFile)) {
-    throw new Error(`${tagsFile} does not exist.`);
-  }
-
-  //
-  // load tags
-  //
-
-  const et = await etags.load(tagsFile);
-
-  //
   // query
-  //
-
   const query = document.getText(document.getWordRangeAtPosition(position));
-  const tags = et.tags.get(query);
+  const tags = data.tags.get(query);
   if (!tags) {
     return [];
   }
 
-  //
   // return results
-  //
-
   return tags.map(tag => {
+    const root = path.dirname(data.file);
     const file = path.join(root, tag.file);
     return new vscode.Location(vscode.Uri.file(file), new vscode.Position(tag.line - 1, 0));
   });
 };
 
-const goToDefinition: vscode.DefinitionProvider = { provideDefinition };
-export default goToDefinition;
+// path to TAGS file for this project or currently open file
+const findTagsFile = (): string => {
+  const root = util.rootDir();
+  const gemfile = util.findFileUp(root, 'Gemfile');
+  if (!gemfile) {
+    throw new Error('Go To Definition only works if you have a Gemfile in your project.');
+  }
+  return path.join(path.dirname(gemfile), 'TAGS');
+};
 
-// block ; time ripper-tags -f TAGS -R . /Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/activerecord-5.1.5 /Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/nokogiri-1.8.2
+const createTagsFile = async (tagsFile: string) => {
+  const cmd = <string>vscode.workspace.getConfiguration('bustagem').get('rip');
+  const cwd = path.dirname(tagsFile);
+  const options = { cwd };
 
-// build tags for project
-// build tags for gems (if set in config)
-// load (or reload) tags
+  const dirs = [
+    '.',
+    '/Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/activerecord-5.1.5',
+    '/Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/nokogiri-1.8.2',
+  ];
+  const escapedDirs = dirs.map(i => `${i}`);
+  const fullCommand = `${cmd} ${escapedDirs.join(' ')}`;
+
+  const tm = new Date().getTime();
+  await util.exec(fullCommand, options);
+  const elapsed = new Date().getTime() - tm;
+  console.log(`rip took ${elapsed}ms`);
