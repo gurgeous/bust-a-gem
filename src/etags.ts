@@ -1,15 +1,31 @@
-const readline = require('readline');
-const fs = require('fs');
+import * as readline from 'readline';
+import * as fs from 'fs';
 
 // https://en.wikipedia.org/wiki/Ctags#Etags_2
 const [STATE_INIT, STATE_HEADER, STATE_TAG, STATE_ERROR] = [0, 1, 2, 3];
 const HEADER_RE = /^\x0c/;
 const TAG_RE = /^([^\x7f]+)\x7f([^\x01]+)\x01([^,]+)/;
 
-const etags = file => {
+export interface Etags {
+  readonly file: string;
+  readonly mtime: Date;
+  readonly tags: Map<string, Tag[]>;
+}
+
+export interface Tag {
+  readonly file: string;
+  readonly line: number;
+}
+
+interface Header {
+  readonly file: string;
+  readonly size: number;
+}
+
+export const load = (file: string): Promise<Etags> => {
   // this is what we return
   const { mtime } = fs.statSync(file);
-  const results = {
+  const results: Etags = {
     file,
     mtime,
     tags: new Map(),
@@ -18,13 +34,13 @@ const etags = file => {
 
   // parse state
   let state = STATE_INIT;
-  let header;
+  let header: Header;
 
   return new Promise((resolve, reject) => {
     const input = fs.createReadStream(file, { encoding: 'utf8' });
     const lineReader = readline.createInterface({ input });
 
-    const onLine = line => {
+    const onLine = (line: string) => {
       switch (state) {
         case STATE_INIT: {
           if (HEADER_RE.exec(line)) {
@@ -95,5 +111,3 @@ const etags = file => {
       });
   });
 };
-
-module.exports = etags;
