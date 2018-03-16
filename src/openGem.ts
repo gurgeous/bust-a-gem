@@ -1,6 +1,6 @@
-import { gemList } from './gemList';
-import * as path from 'path';
+import * as gem from './gem';
 import * as vscode from 'vscode';
+import * as util from './util';
 
 const openGem = async () => {
   try {
@@ -11,27 +11,29 @@ const openGem = async () => {
 };
 
 const openGem0 = async () => {
-  // load gems
-  const dirs = await gemList();
+  const bg = util.init();
 
-  // turn list of dirs into QuickPickItems
-  const labelToDirectory = new Map<string, string>();
-  const items: vscode.QuickPickItem[] = dirs.map(dir => {
-    const label = path.basename(dir);
-    labelToDirectory.set(label, dir);
-    return { label, description: '' };
+  // load gems
+  const gems = await gem.list(bg.rootPath);
+
+  // turn gems into QuickPickItems
+  const labelToGem = new Map<string, gem.Gem>();
+  const items: vscode.QuickPickItem[] = gems.map(gem => {
+    labelToGem.set(gem.label, gem);
+    return { label: gem.label, description: '' };
   });
 
-  // show quick picks
   const options = {
     placeHolder: 'Select a gem to open:',
   };
+
+  // show quick picks
   vscode.window.showQuickPick(items, options).then(selection => {
     if (!selection) {
       return;
     }
-    const dir = <string>labelToDirectory.get(selection.label);
-    const uri = vscode.Uri.file(dir);
+    const g = <gem.Gem>labelToGem.get(selection.label);
+    const uri = vscode.Uri.file(g.dir);
     vscode.commands.executeCommand('vscode.openFolder', uri);
   });
 };

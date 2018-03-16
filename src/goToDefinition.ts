@@ -14,7 +14,7 @@ import * as vscode from 'vscode';
 // README
 // release
 
-// state
+// in-memory state
 let data: etags.Etags;
 
 //
@@ -44,15 +44,14 @@ const provideDefinition0 = async (
   document: vscode.TextDocument,
   position: vscode.Position
 ): Promise<vscode.Definition> => {
-  // where is the TAGS file?
-  const tagsFile = findTagsFile();
+  const bg = util.init();
 
   // create/load if necessary
-  if (!data || data.file !== tagsFile) {
-    if (!fs.existsSync(tagsFile)) {
-      await createTagsFile(tagsFile);
+  if (!data || data.file !== bg.tagsPath) {
+    if (!fs.existsSync(bg.tagsPath)) {
+      await createTags(bg);
     }
-    data = await etags.load(tagsFile);
+    data = await etags.load(bg.tagsPath);
   }
 
   // query
@@ -64,26 +63,17 @@ const provideDefinition0 = async (
 
   // return results
   return tags.map(tag => {
-    const root = path.dirname(data.file);
-    const file = path.join(root, tag.file);
+    const file = path.join(bg.rootPath, tag.file);
     return new vscode.Location(vscode.Uri.file(file), new vscode.Position(tag.line - 1, 0));
   });
 };
 
-// path to TAGS file for this project or currently open file
-const findTagsFile = (): string => {
-  const root = util.rootDir();
-  const gemfile = util.findFileUp(root, 'Gemfile');
-  if (!gemfile) {
-    throw new Error('Go To Definition only works if you have a Gemfile in your project.');
-  }
-  return path.join(path.dirname(gemfile), 'TAGS');
-};
+const createTags = async (bg: util.BustAGem) => {
+  const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');
+  const options = { cwd: bg.rootPath };
 
-const createTagsFile = async (tagsFile: string) => {
-  const cmd = <string>vscode.workspace.getConfiguration('bustagem').get('rip');
-  const cwd = path.dirname(tagsFile);
-  const options = { cwd };
+  // calculate dirs and append them to cmd
+  // const gems = vscode.workspace.getConfiguration('bustagem').get<string[]>('gems');
 
   const dirs = [
     '.',
@@ -97,3 +87,10 @@ const createTagsFile = async (tagsFile: string) => {
   await util.exec(fullCommand, options);
   const elapsed = new Date().getTime() - tm;
   console.log(`rip took ${elapsed}ms`);
+};
+
+// Load gem dirs from config, turn into full gem paths
+// const gemDirs = async (): string[] => {
+//   const gemNames = vscode.workspace.getConfiguration('bustagem').get<string[]>('gems');
+
+// }

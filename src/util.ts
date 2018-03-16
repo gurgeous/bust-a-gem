@@ -3,44 +3,32 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+export interface BustAGem {
+  // vscode.workspace.rootPath
+  rootPath: string;
+  // path to TAGS file (rootPath/TAGS)
+  tagsPath: string;
+}
+
 //
-// Look in dir and parents for filename. Returns full path when found.
+// Init the extension with sanity checks.
 //
 
-export const findFileUp = (dir: string, filename: string): string | null => {
-  const maybe = path.join(dir, filename);
-  if (fs.existsSync(maybe)) {
-    return maybe;
+export const init = (): BustAGem => {
+  const rootPath = vscode.workspace.rootPath;
+  if (!rootPath) {
+    throw new Error('you have to open a folder (not a file)');
   }
-
-  const parent = path.dirname(dir);
-  if (parent && parent !== dir) {
-    return findFileUp(parent, filename);
+  if (!fs.existsSync(path.join(rootPath, 'Gemfile'))) {
+    throw new Error('only works if you have a Gemfile in your project');
   }
-
-  // failure
-  return null;
+  const tagsPath = path.join(rootPath, 'TAGS');
+  return { rootPath, tagsPath };
 };
 
 //
-// Find root dir for current project or file.
+// Promise wrapper around child_process.exec
 //
-
-export const rootDir = (): string => {
-  // is a project open? use that
-  if (vscode.workspace.rootPath) {
-    return vscode.workspace.rootPath;
-  }
-
-  // which file is active?
-  const editor = vscode.window.activeTextEditor;
-  if (editor) {
-    return path.dirname(editor.document.fileName);
-  }
-
-  // failure
-  throw new Error('you have to open a file or project first.');
-};
 
 export const exec = (command: string, options: child_process.ExecOptions): Promise<string> => {
   return new Promise((resolve, reject) => {

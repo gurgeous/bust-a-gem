@@ -25,20 +25,27 @@
     "configuration": {
       "title": "Bust-A-Gem settings",
       "properties": {
-        "bustagem.bundle": {
+        "bustagem.cmd.bundle": {
           "type": "string",
           "default": "bundle show --paths",
           "description": "Bundler command to list gem paths."
         },
-        "bustagem.gem": {
+        "bustagem.cmd.gemdir": {
           "type": "string",
           "default": "gem env gemdir",
           "description": "Command to locate gem directory."
         },
-        "bustagem.rip": {
+        "bustagem.cmd.rip": {
           "type": "string",
           "default": "ripper-tags -f TAGS -R",
           "description": "Command to create TAGS File."
+        },
+        "bustagem.gems": {
+          "type": "array",
+          "description": "List of gems to index when building TAGS.",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
