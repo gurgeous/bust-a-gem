@@ -17,9 +17,9 @@ const openGem0 = async () => {
   const gems = await gem.list(bg.rootPath);
 
   // turn gems into QuickPickItems
-  const labelToGem = new Map<string, gem.Gem>();
+  const map = new Map<string, gem.Gem>();
   const items: vscode.QuickPickItem[] = gems.map(gem => {
-    labelToGem.set(gem.label, gem);
+    map.set(gem.label, gem);
     return { label: gem.label, description: '' };
   });
 
@@ -32,7 +32,7 @@ const openGem0 = async () => {
     if (!selection) {
       return;
     }
-    const g = <gem.Gem>labelToGem.get(selection.label);
+    const g = <gem.Gem>map.get(selection.label);
     const uri = vscode.Uri.file(g.dir);
     vscode.commands.executeCommand('vscode.openFolder', uri);
   });

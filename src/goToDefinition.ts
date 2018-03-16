@@ -1,18 +1,19 @@
 import * as etags from './etags';
 import * as fs from 'fs';
+import * as gem from './gem';
 import * as path from 'path';
 import * as util from './util';
 import * as vscode from 'vscode';
 
 // TODO
 //
-// config for gems to index
-// turn gem names into gem dirs
-// status bar status
+// status bar
+// reload / rebuild
 // great error handling (ripper-tags, bad gem names, escaping, etc.)
-// reload
+// detect if gem list is out of date or Gemfile.lock changed
 // README
 // release
+//
 
 // in-memory state
 let data: etags.Etags;
@@ -46,10 +47,10 @@ const provideDefinition0 = async (
 ): Promise<vscode.Definition> => {
   const bg = util.init();
 
-  // create/load if necessary
+  // rip & load if necessary
   if (!data || data.file !== bg.tagsPath) {
     if (!fs.existsSync(bg.tagsPath)) {
-      await createTags(bg);
+      await rip(bg);
     }
     data = await etags.load(bg.tagsPath);
   }
@@ -68,29 +69,42 @@ const provideDefinition0 = async (
   });
 };
 
-const createTags = async (bg: util.BustAGem) => {
+const rip = async (bg: util.BustAGem) => {
+  const dirs = ['.'];
+
+  //
+  // append dirs from bustagem.gems
+  //
+
+  const gemNames = <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
+  if (gemNames.length > 0) {
+    const map = new Map<string, gem.Gem>();
+    const gems = await gem.list(bg.rootPath);
+    for (const gem of gems) {
+      map.set(gem.label, gem);
+      map.set(gem.labelWithoutVersion, gem);
+    }
+    for (const name of gemNames) {
+      const g = map.get(name);
+      if (!g) {
+        throw new Error(`couldn't find gem ${name} in list of gems for project`);
+      }
+      dirs.push(g.dir);
+    }
+  }
+
+  //
+  // rip!
+  //
+
   const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');
-  const options = { cwd: bg.rootPath };
-
-  // calculate dirs and append them to cmd
-  // const gems = vscode.workspace.getConfiguration('bustagem').get<string[]>('gems');
-
-  const dirs = [
-    '.',
-    '/Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/activerecord-5.1.5',
-    '/Users/amd/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/nokogiri-1.8.2',
-  ];
   const escapedDirs = dirs.map(i => `${i}`);
   const fullCommand = `${cmd} ${escapedDirs.join(' ')}`;
+
+  const options = { cwd: bg.rootPath };
 
   const tm = new Date().getTime();
   await util.exec(fullCommand, options);
   const elapsed = new Date().getTime() - tm;
   console.log(`rip took ${elapsed}ms`);
 };
-
-// Load gem dirs from config, turn into full gem paths
-// const gemDirs = async (): string[] => {
-//   const gemNames = vscode.workspace.getConfiguration('bustagem').get<string[]>('gems');
-
-// }
