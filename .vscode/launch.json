@@ -14,7 +14,9 @@
         "/Users/amd/banter",
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}"
-      ]
+      ],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "preLaunchTask": "npm: watch"
     },
     {
       "name": "Extension Tests",
@@ -24,7 +26,9 @@
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/test"
-      ]
+      ],
+      "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
+      "preLaunchTask": "npm: watch"
     }
   ]
 }
