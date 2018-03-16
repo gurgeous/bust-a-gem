@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 const openGem = async () => {
   try {
-    openGem0();
+    await openGem0();
   } catch (error) {
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
   }
