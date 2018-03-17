@@ -21,28 +21,9 @@ const provideDefinition = async (
   document: vscode.TextDocument,
   position: vscode.Position
 ): Promise<vscode.Definition> => {
-  if (running) {
-    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
-    return [];
-  }
-  running = true;
-
-  try {
-    const result = await provideDefinition0(document, position);
-    running = false;
-    return result;
-  } catch (error) {
-    running = false;
-
-    // silent failure?
-    if (error.message === SILENCE) {
-      return [];
-    }
-
-    console.error(error);
-    vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
-    return [];
-  }
+  return await guard<vscode.Definition>([], async () => {
+    return await provideDefinition0(document, position);
+  });
 };
 export const goTo = { provideDefinition };
 
@@ -51,28 +32,11 @@ export const goTo = { provideDefinition };
 //
 
 export const rebuild = async () => {
-  if (running) {
-    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
-    return [];
-  }
-  running = true;
-
-  try {
+  guard(undefined, async () => {
     const bustAGem = BustAGem.singleton();
     bustAGem.etags = undefined;
-    await rip(bustAGem);
-    running = false;
-  } catch (error) {
-    running = false;
-
-    // silent failure?
-    if (error.message === SILENCE) {
-      return [];
-    }
-
-    console.error(error);
-    vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
-  }
+    await rip(bustAGem, false);
+  });
 };
 
 //
@@ -88,7 +52,7 @@ const provideDefinition0 = async (
   if (!bustAGem.etags) {
     // rip (can be slow)
     if (!fs.existsSync(bustAGem.tagsFile)) {
-      await rip(BustAGem.singleton());
+      await rip(BustAGem.singleton(), true);
     }
 
     // load (quite fast)
@@ -108,7 +72,7 @@ const provideDefinition0 = async (
 
 let lastInstallWarning = 0;
 
-const rip = async (bustAGem: BustAGem) => {
+const rip = async (bustAGem: BustAGem, failSilently: boolean) => {
   // get dirs
   const unescapedDirs = await dirsToRip(bustAGem);
   const dirs = unescapedDirs.map(i => `'${i}'`);
@@ -129,11 +93,13 @@ const rip = async (bustAGem: BustAGem) => {
     } catch (error) {
       // show a nice error about ripper-tags, but not too often
       if (error.message.match(/command not found/)) {
-        const now = _.now();
-        if (now - lastInstallWarning < 60 * 60 * 1000) {
-          throw new Error(SILENCE);
+        if (failSilently) {
+          const now = _.now();
+          if (now - lastInstallWarning < 60 * 60 * 1000) {
+            throw new Error(SILENCE);
+          }
+          lastInstallWarning = now;
         }
-        lastInstallWarning = now;
         throw new Error('Go To Definition requires the ripper-tags gem.');
       }
 
@@ -165,3 +131,27 @@ const dirsToRip = async (bustAGem: BustAGem): Promise<string[]> => {
   }
   return dirs;
 };
+
+async function guard<T>(returnOnError: T, f: () => Promise<T>): Promise<T> {
+  let result = returnOnError;
+
+  // guard against running twice
+  if (running) {
+    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
+    return result;
+  }
+  running = true;
+
+  try {
+    result = await f();
+  } catch (error) {
+    // loud failure?
+    if (error.message !== SILENCE) {
+      console.error(error);
+      vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
+    }
+  }
+
+  running = false;
+  return result;
+}

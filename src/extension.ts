@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 // TODO
 //
+// test all errors
 // great error handling (ripper-tags, bad gem names, escaping, etc.)
 // README
 // release
