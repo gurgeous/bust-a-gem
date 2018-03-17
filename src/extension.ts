@@ -3,13 +3,6 @@ import * as open from './open';
 import * as vscode from 'vscode';
 
 //
-// TODO
-//
-// README
-// release
-//
-
-//
 // Extension activation
 //
 
