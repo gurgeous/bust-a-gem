@@ -12,11 +12,32 @@ import Gem from './gem';
 // This file handles Go to Definition and Rebuild.
 //
 
-// Typically we report error messages to the user loudly. This will be annoying
-// if VS Code is calling Go To Definition frequently and ripper-tags isn't
-// installed. This special quiet error class tells the caller not to say
-// anything to the user.
-class QuietError extends Error {}
+//
+// VS Code can call provideDefinition quite aggressively, so bail right away if
+// we showed an error recently. Try not to be annoying.
+//
+
+class NoWhine {
+  // When did we last show the 'ripper-tags not found' error?
+  private errorAt = 0;
+
+  // reset when the user rebuilds
+  reset = () => {
+    this.errorAt = 0;
+  };
+
+  // should we bail early because an error occurred recently?
+  tooSoon = () => {
+    return _.now() - this.errorAt < util.seconds(10);
+  };
+
+  // note that an install error occurred
+  onError = () => {
+    this.errorAt = _.now();
+  };
+}
+
+let noWhine = new NoWhine();
 
 //
 // Go To Definition entry point. It wraps provideDefinition0 with a guard, which
@@ -28,6 +49,11 @@ const provideDefinition = async (
   document: vscode.TextDocument,
   position: vscode.Position
 ): Promise<vscode.Definition> => {
+  // Try not to whine about ripper-tags too often.
+  if (noWhine.tooSoon()) {
+    return [];
+  }
+
   return await guard<vscode.Definition>([], async () => {
     const query = document.getText(document.getWordRangeAtPosition(position));
     return await provideDefinition0(query);
@@ -42,6 +68,9 @@ export const goTo = { provideDefinition };
 //
 
 export const rebuild = async () => {
+  // This is a good time to start whining again.
+  noWhine.reset();
+
   guard(undefined, async () => {
     const bustAGem = BustAGem.singleton();
     bustAGem.etags = null;
@@ -81,9 +110,6 @@ const provideDefinition0 = async (query: string): Promise<vscode.Definition> => 
 // Run ripper-tags to create TAGS file.
 //
 
-// When did we last whine about ripper-tags?
-let lastInstallWarning = 0;
-
 const rip = async (bustAGem: BustAGem, failSilently: boolean) => {
   // get dirs to rip from config
   const unescapedDirs = await dirsToRip(bustAGem);
@@ -100,24 +126,7 @@ const rip = async (bustAGem: BustAGem, failSilently: boolean) => {
   };
 
   await vscode.window.withProgress(progressOptions, async () => {
-    try {
-      // go!
-      await util.exec(cmd, { cwd: bustAGem.rootPath });
-    } catch (error) {
-      // whine about ripper-tags, but not too often
-      if (error.message.match(/command not found/)) {
-        if (failSilently) {
-          const WHINE_EVERY = 60 * 60 * 1000;
-          if (_.now() - lastInstallWarning < WHINE_EVERY) {
-            throw new QuietError();
-          }
-        }
-        lastInstallWarning = _.now();
-        throw new Error('Go To Definition requires the ripper-tags gem.');
-      }
-
-      throw error;
-    }
+    await util.exec(cmd, { cwd: bustAGem.rootPath });
   });
   console.log(`ripper-tags success ${_.now() - tm}ms`);
 };
@@ -157,7 +166,6 @@ let running = false;
 //
 //   * prevents reentrancy
 //   * reports errors
-//   * handles QuietError
 //
 
 async function guard<T>(returnOnError: T, f: () => Promise<T>): Promise<T> {
@@ -165,7 +173,6 @@ async function guard<T>(returnOnError: T, f: () => Promise<T>): Promise<T> {
 
   // guard against running twice
   if (running) {
-    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
     return result;
   }
   running = true;
@@ -173,11 +180,15 @@ async function guard<T>(returnOnError: T, f: () => Promise<T>): Promise<T> {
   try {
     result = await f();
   } catch (error) {
-    // report an error if not quiet
-    if (!(error instanceof QuietError)) {
-      console.error(error);
-      vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
+    let message = error.message;
+
+    if (message.match(/command not found/)) {
+      noWhine.onError();
+      message = 'Go To Definition requires the ripper-tags gem.';
     }
+
+    console.error(error);
+    vscode.window.showErrorMessage(`Bust-A-Gem: ${message}`);
   }
 
   running = false;

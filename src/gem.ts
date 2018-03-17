@@ -37,7 +37,7 @@ export default class Gem {
   // List gems using bundle show --paths.
   static async list(rootPath: string): Promise<Gem[]> {
     const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
-    const options = { timeout: 3000, cwd: rootPath };
+    const options = { timeout: util.seconds(3), cwd: rootPath };
     const stdout = await util.exec(cmd, options);
     const dirs = stdout.trim().split('\n');
     if (dirs.length === 0) {

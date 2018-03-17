@@ -17,3 +17,9 @@ export const exec = (command: string, options: child_process.ExecOptions): Promi
     });
   });
 };
+
+// time
+export const seconds = (i: number) => i * 1000;
+export const minutes = (i: number) => i * seconds(60);
+export const hours = (i: number) => i * minutes(60);
+export const days = (i: number) => i * hours(24);
