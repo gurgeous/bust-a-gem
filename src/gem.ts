@@ -3,7 +3,7 @@ import * as util from './util';
 import * as vscode from 'vscode';
 
 //
-// Gem class that knows where a gem lives and what to call it
+// Gem class that knows where a gem lives and its label.
 //
 
 export default class Gem {
@@ -39,7 +39,6 @@ export default class Gem {
     const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
     const options = { timeout: 3000, cwd: rootPath };
     const stdout = await util.exec(cmd, options);
-
     const dirs = stdout.trim().split('\n');
     if (dirs.length === 0) {
       throw new Error(`${cmd} didn't return anything.`);

@@ -4,8 +4,9 @@ import * as vscode from 'vscode';
 import { Etags } from './etags';
 
 //
-// Main extension class that stores our state. This gets initalized once per
-// editor, then hangs around as a singleton.
+// A helper class that stores our state as a singleton. Once initialized it
+// never goes away. This also enforces our requirement to only work with
+// projects and Gemfiles.
 //
 
 export default class BustAGem {
@@ -21,7 +22,10 @@ export default class BustAGem {
   // vscode.workspace.rootPath
   readonly rootPath: string;
 
-  constructor() {
+  // etags state
+  etags: Etags | null = null;
+
+  private constructor() {
     const rootPath = vscode.workspace.rootPath;
     if (!rootPath) {
       throw new Error('you must open a directory (not a file)');
@@ -31,16 +35,4 @@ export default class BustAGem {
       throw new Error('only works if you have a Gemfile in your project');
     }
   }
-
-  // path to rootPath/TAGS
-  get tagsFile() {
-    if (!this._tagsFile) {
-      this._tagsFile = path.join(this.rootPath, 'TAGS');
-    }
-    return this._tagsFile;
-  }
-  private _tagsFile: string | undefined;
-
-  // etags state
-  etags: Etags | undefined;
 }

@@ -4,7 +4,8 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 //
-// This class parses a TAGS file.
+// This class parses a TAGS file and has a helper for provideDefinition.
+//
 // See https://en.wikipedia.org/wiki/Ctags#Etags_2
 //
 
@@ -21,7 +22,7 @@ export class Etags {
     this.tags = new Map();
   }
 
-  // run a query by looking up key in tags
+  // Run a query by looking up key in tags.
   provideDefinition(key: string): vscode.Location[] {
     const base = path.dirname(this.file);
     const list = this.tags.get(key);
@@ -34,7 +35,7 @@ export class Etags {
     });
   }
 
-  // add a tag to this.tags (used below)
+  // Add a tag to this.tags (used below)
   private addTag(key: string, tag: Tag) {
     let array = this.tags.get(key);
     if (!array) {
@@ -45,7 +46,8 @@ export class Etags {
   }
 
   //
-  // load the file
+  // Load the file. We use a state machine to keep track of what's happening in
+  // the stream.
   //
 
   async load(): Promise<{}> {
@@ -78,19 +80,19 @@ export class Etags {
           }
 
           case STATE_TAG: {
-            // are we starting a new header?
-            if (HEADER_RE.exec(line)) {
-              state = STATE_HEADER;
-              return;
-            }
-
-            // text, tag, lineno, offset
             const match = TAG_RE.exec(line);
             if (!match) {
+              // are we starting a new header? (I put this in here for
+              // performance, since most lines are tags)
+              if (HEADER_RE.exec(line)) {
+                state = STATE_HEADER;
+                return;
+              }
               throw new Error(`couldn't parse line '${line}'`);
             }
 
-            // append
+            // now append the tag
+            // text, tag, lineno, offset
             const key = match[2];
             const lineno = parseInt(match[3], 10);
             this.addTag(key, new Tag(header, lineno));
@@ -119,7 +121,7 @@ export class Etags {
   }
 }
 
-// a header line from the file
+// A header line from the TAGS file
 class Header {
   readonly file: string;
   readonly size: number;
@@ -130,7 +132,7 @@ class Header {
   }
 }
 
-// one tag from the file
+// A single tag from the TAGS file
 export class Tag {
   readonly file: string;
   readonly line: number;

@@ -3,7 +3,7 @@ import BustAGem from './bustAGem';
 import Gem from './gem';
 
 //
-// Open Gem - try/catch wrapper around open0
+// Open Gem entry point. This is a try/catch wrapper around open0.
 //
 
 export const open = async () => {
