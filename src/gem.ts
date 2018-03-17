@@ -1,41 +1,49 @@
 import * as path from 'path';
-import * as vscode from 'vscode';
 import * as util from './util';
+import * as vscode from 'vscode';
 
-export interface Gem {
-  // what is this gem called?
-  label: string;
+//
+// Gem class that knows where a gem lives and what to call it
+//
 
-  // name without the version
-  labelWithoutVersion: string;
-
+export default class Gem {
   // where is the gem?
-  dir: string;
-}
+  readonly dir: string;
 
-//
-// List gems using bundle show --paths.
-//
-
-export const list = async (rootPath: string): Promise<Gem[]> => {
-  const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
-  const options = { timeout: 3000, cwd: rootPath };
-  const stdout = await util.exec(cmd, options);
-
-  const dirs = stdout.trim().split('\n');
-  if (dirs.length === 0) {
-    throw new Error(`${cmd} didn't return anything.`);
+  constructor(dir: string) {
+    this.dir = dir;
   }
 
-  const gems = dirs.map(dir => {
-    const label = path.basename(dir);
+  // What is this gem called?
+  get label() {
+    if (!this._label) {
+      this._label = path.basename(this.dir);
+    }
+    return this._label;
+  }
+  private _label: string | undefined;
 
-    // attempt to strip off version info for labelWithoutVersion
-    const match = label.match(/^(.*)-\d+(\.\d)+$/);
-    const labelWithoutVersion = match ? match[1] : label;
+  // Label without the version, if possible.
+  get labelWithoutVersion() {
+    if (!this._labelWithoutVersion) {
+      // attempt to strip off version info for labelWithoutVersion
+      const match = this.label.match(/^(.*)-\d+(\.\d)+$/);
+      this._labelWithoutVersion = match ? match[1] : this.label;
+    }
+    return this._labelWithoutVersion;
+  }
+  private _labelWithoutVersion: string | undefined;
 
-    return { label, labelWithoutVersion, dir };
-  });
+  // List gems using bundle show --paths.
+  static async list(rootPath: string): Promise<Gem[]> {
+    const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
+    const options = { timeout: 3000, cwd: rootPath };
+    const stdout = await util.exec(cmd, options);
 
-  return gems;
-};
+    const dirs = stdout.trim().split('\n');
+    if (dirs.length === 0) {
+      throw new Error(`${cmd} didn't return anything.`);
+    }
+    return dirs.map(dir => new Gem(dir));
+  }
+}

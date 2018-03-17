@@ -13,13 +13,21 @@
     "vscode": "^1.21.0"
   },
   "categories": ["Other"],
-  "activationEvents": ["onCommand:extension.openGem", "onLanguage:ruby"],
+  "activationEvents": [
+    "onCommand:extension.open",
+    "onCommand:extension.rebuild",
+    "onLanguage:ruby"
+  ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
       {
-        "command": "extension.openGem",
+        "command": "extension.open",
         "title": "Bust-A-Gem: Open Gem..."
+      },
+      {
+        "command": "extension.rebuild",
+        "title": "Bust-A-Gem: Rebuild Tags"
       }
     ],
     "configuration": {
@@ -68,5 +76,9 @@
     "printWidth": 100,
     "singleQuote": true,
     "trailingComma": "es5"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.105",
+    "lodash": "^4.17.5"
   }
 }
