@@ -41,6 +41,6 @@ export default class BustAGem {
   }
   private _tagsFile: string | undefined;
 
-  // currently loaded etags file
+  // etags state
   etags: Etags | undefined;
 }

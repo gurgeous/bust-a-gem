@@ -10,6 +10,7 @@ export const open = async () => {
   try {
     await open0();
   } catch (error) {
+    console.error(error);
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
   }
 };

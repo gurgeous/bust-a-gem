@@ -6,25 +6,63 @@ import * as vscode from 'vscode';
 import BustAGem from './bustAGem';
 import Gem from './gem';
 
+// Are we already running? We avoid being reentrant because it can do nasty
+// things like ripping TAGS twice simultaneously.
+let running = false;
+
 //
-// main command, wraps provideDefinition0 with try/catch
+// main provideDefinition, wraps provideDefinition0 with try/catch and running
+// guard
 //
 
 const provideDefinition = async (
   document: vscode.TextDocument,
   position: vscode.Position
 ): Promise<vscode.Definition> => {
+  if (running) {
+    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
+    return [];
+  }
+  running = true;
+
   try {
-    return await provideDefinition0(document, position);
+    const result = await provideDefinition0(document, position);
+    running = false;
+    return result;
   } catch (error) {
+    console.error(error);
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
+    running = false;
     return [];
   }
 };
 export const goTo = { provideDefinition };
 
 //
-// this is it
+// Manually rebuild tags. Users do this periodically. Includes running guard.
+//
+
+export const rebuild = async () => {
+  if (running) {
+    vscode.window.showInformationMessage(`Bust-A-Gem: rip in progress, please wait`);
+    return [];
+  }
+  running = true;
+
+  try {
+    const bustAGem = BustAGem.singleton();
+    bustAGem.etags = undefined;
+    await rip(bustAGem);
+    running = false;
+  } catch (error) {
+    console.error(error);
+    vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
+    running = false;
+  }
+};
+
+//
+// provide definition
 //
 
 const provideDefinition0 = async (
@@ -36,13 +74,7 @@ const provideDefinition0 = async (
   if (!bustAGem.etags) {
     // rip (can be slow)
     if (!fs.existsSync(bustAGem.tagsFile)) {
-      const progressOptions = {
-        location: vscode.ProgressLocation.Window,
-        title: 'Bust-A-Gem ripping...',
-      };
-      await vscode.window.withProgress(progressOptions, async () => {
-        await rip(bustAGem);
-      });
+      await rip(BustAGem.singleton());
     }
 
     // load (quite fast)
@@ -66,11 +98,19 @@ const rip = async (bustAGem: BustAGem) => {
   const dirs = unescapedDirs.map(i => `'${i}'`);
 
   // go!
-  const tm = _.now();
   const rip = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');
   const cmd = `${rip} ${dirs.join(' ')}`;
-  await util.exec(cmd, { cwd: bustAGem.rootPath });
-  console.log(`rip took ${_.now() - tm}ms`);
+
+  const progressOptions = {
+    location: vscode.ProgressLocation.Window,
+    title: 'Bust-A-Gem ripping...',
+  };
+
+  const tm = _.now();
+  await vscode.window.withProgress(progressOptions, async () => {
+    await util.exec(cmd, { cwd: bustAGem.rootPath });
+  });
+  console.log(`ripper-tags took ${_.now() - tm}ms`);
 };
 
 //
@@ -94,8 +134,4 @@ const dirsToRip = async (bustAGem: BustAGem): Promise<string[]> => {
     }
   }
   return dirs;
-};
-
-export const rebuild = () => {
-  console.log('rebuild');
 };

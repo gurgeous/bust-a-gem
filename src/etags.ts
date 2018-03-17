@@ -14,12 +14,10 @@ const TAG_RE = /^([^\x7f]+)\x7f([^\x01]+)\x01([^,]+)/;
 
 export class Etags {
   readonly file: string;
-  readonly mtime: Date;
   readonly tags: Map<string, Tag[]>;
 
   constructor(file: string) {
     this.file = file;
-    this.mtime = fs.statSync(file).mtime;
     this.tags = new Map();
   }
 

@@ -4,9 +4,7 @@ import * as vscode from 'vscode';
 
 // TODO
 //
-// reload / rebuild
 // great error handling (ripper-tags, bad gem names, escaping, etc.)
-// detect if gem list is out of date or Gemfile.lock changed
 // README
 // release
 //
