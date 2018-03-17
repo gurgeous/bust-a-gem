@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { Etags } from './etags';
 
 //
 // Main extension class that stores our state. This gets initalized once per
@@ -39,4 +40,7 @@ export default class BustAGem {
     return this._tagsFile;
   }
   private _tagsFile: string | undefined;
+
+  // currently loaded etags file
+  etags: Etags | undefined;
 }
