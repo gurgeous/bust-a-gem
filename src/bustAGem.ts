@@ -28,11 +28,11 @@ export default class BustAGem {
   private constructor() {
     const rootPath = vscode.workspace.rootPath;
     if (!rootPath) {
-      throw new Error('you must open a directory (not a file)');
+      throw new Error('you must open a directory, not a file.');
     }
     this.rootPath = rootPath;
     if (!fs.existsSync(path.join(rootPath, 'Gemfile'))) {
-      throw new Error('only works if you have a Gemfile in your project');
+      throw new Error('only works if you have a Gemfile in your project.');
     }
   }
 }

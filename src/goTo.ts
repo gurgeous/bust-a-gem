@@ -135,7 +135,7 @@ const dirsToRip = async (bustAGem: BustAGem): Promise<string[]> => {
     for (const name of gemNames) {
       const g = map[name];
       if (!g) {
-        throw new Error(`couldn't find gem ${name} in gem list`);
+        throw new Error(`you asked me to index gem '${name}', but I can't find it.`);
       }
       dirs.push(g.dir);
     }

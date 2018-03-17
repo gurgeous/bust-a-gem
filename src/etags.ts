@@ -65,7 +65,7 @@ export class Etags {
             if (HEADER_RE.exec(line)) {
               state = STATE_HEADER;
             } else {
-              throw new Error(`${this.file} isn't an etags file.`);
+              throw new Error(`${this.file} isn't an etags file. I can't parse it.`);
             }
             break;
           }
@@ -88,7 +88,7 @@ export class Etags {
                 state = STATE_HEADER;
                 return;
               }
-              throw new Error(`couldn't parse line '${line}'`);
+              throw new Error(`while reading ${this.file}, couldn't parse line '${line}'.`);
             }
 
             // now append the tag
