@@ -33,17 +33,22 @@ const provideDefinition0 = async (
 ): Promise<vscode.Definition> => {
   const bustAGem = BustAGem.singleton();
 
-  // rip & load if necessary
   if (!bustAGem.etags) {
+    // rip (can be slow)
     if (!fs.existsSync(bustAGem.tagsFile)) {
-      await rip(bustAGem);
+      const progressOptions = {
+        location: vscode.ProgressLocation.Window,
+        title: 'Bust-A-Gem ripping...',
+      };
+      await vscode.window.withProgress(progressOptions, async () => {
+        await rip(bustAGem);
+      });
     }
 
-    const tm = _.now();
+    // load (quite fast)
     const etags = new Etags(bustAGem.tagsFile);
     await etags.load();
     bustAGem.etags = etags;
-    console.log(`loaded TAGS in ${_.now() - tm}ms`);
   }
 
   // query

@@ -113,7 +113,7 @@ export class Etags {
         })
         .on('close', () => {
           input.close();
-          if (state != STATE_ERROR) {
+          if (state !== STATE_ERROR) {
             resolve();
           }
         });
