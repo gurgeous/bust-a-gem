@@ -6,6 +6,8 @@ import * as vscode from 'vscode';
 import BustAGem from './bustAGem';
 import Gem from './gem';
 
+const SILENCE = 'silence!';
+
 // Are we already running? We avoid being reentrant because it can do nasty
 // things like ripping TAGS twice simultaneously.
 let running = false;
@@ -30,9 +32,15 @@ const provideDefinition = async (
     running = false;
     return result;
   } catch (error) {
+    running = false;
+
+    // silent failure?
+    if (error.message === SILENCE) {
+      return [];
+    }
+
     console.error(error);
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
-    running = false;
     return [];
   }
 };
@@ -55,9 +63,15 @@ export const rebuild = async () => {
     await rip(bustAGem);
     running = false;
   } catch (error) {
+    running = false;
+
+    // silent failure?
+    if (error.message === SILENCE) {
+      return [];
+    }
+
     console.error(error);
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
-    running = false;
   }
 };
 
@@ -92,6 +106,8 @@ const provideDefinition0 = async (
 // Run ripper-tags to create TAGS file.
 //
 
+let lastInstallWarning = 0;
+
 const rip = async (bustAGem: BustAGem) => {
   // get dirs
   const unescapedDirs = await dirsToRip(bustAGem);
@@ -108,7 +124,21 @@ const rip = async (bustAGem: BustAGem) => {
 
   const tm = _.now();
   await vscode.window.withProgress(progressOptions, async () => {
-    await util.exec(cmd, { cwd: bustAGem.rootPath });
+    try {
+      await util.exec(cmd, { cwd: bustAGem.rootPath });
+    } catch (error) {
+      // show a nice error about ripper-tags, but not too often
+      if (error.message.match(/command not found/)) {
+        const now = _.now();
+        if (now - lastInstallWarning < 60 * 60 * 1000) {
+          throw new Error(SILENCE);
+        }
+        lastInstallWarning = now;
+        throw new Error('Go To Definition requires the ripper-tags gem.');
+      }
+
+      throw error;
+    }
   });
   console.log(`ripper-tags took ${_.now() - tm}ms`);
 };
