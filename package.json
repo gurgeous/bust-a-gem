@@ -44,11 +44,6 @@
           "default": "bundle show --paths",
           "description": "Bundler command to list gem paths."
         },
-        "bustagem.cmd.gemdir": {
-          "type": "string",
-          "default": "gem env gemdir",
-          "description": "Command to locate gem directory."
-        },
         "bustagem.cmd.rip": {
           "type": "string",
           "default": "ripper-tags -f TAGS -R",
