@@ -1,10 +1,11 @@
-import { Etags } from './etags';
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from './util';
 import * as vscode from 'vscode';
+
 import BustAGem from './bustAGem';
+import { Etags } from './etags';
 import Gem from './gem';
 
 //
@@ -135,7 +136,11 @@ const dirsToRip = async (bustAGem: BustAGem): Promise<string[]> => {
     for (const name of gemNames) {
       const g = map[name];
       if (!g) {
-        throw new Error(`you asked me to index gem '${name}', but I can't find it.`);
+        // bad gem name - not fatal
+        vscode.window.showWarningMessage(
+          `you asked me to index gem '${name}', but I can't find it. Skipping.`
+        );
+        continue;
       }
       dirs.push(g.dir);
     }

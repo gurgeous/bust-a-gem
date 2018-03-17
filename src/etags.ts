@@ -1,6 +1,6 @@
-import * as readline from 'readline';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as readline from 'readline';
 import * as vscode from 'vscode';
 
 //
@@ -30,7 +30,10 @@ export class Etags {
       return [];
     }
     return list.map(tag => {
-      const file = path.join(base, tag.file);
+      let file = tag.file;
+      if (!file.startsWith('/')) {
+        file = path.join(base, file);
+      }
       return new vscode.Location(vscode.Uri.file(file), new vscode.Position(tag.line - 1, 0));
     });
   }

@@ -1,10 +1,15 @@
 {
   "name": "bust-a-gem",
   "displayName": "Bust A Gem",
-  "license": "MIT",
-  "description": "",
   "version": "0.0.1",
   "publisher": "gurgeous",
+  "description": "Go to Definition for Ruby, and quickly open gems.",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#e9573f",
+    "theme": "dark"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/gurgeous/bust-a-gem.git"
@@ -12,7 +17,8 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "categories": ["Other"],
+  "keywords": ["bundle", "bundler", "gem", "gemfile", "rails", "ruby", "rubygem", "rubygems"],
+  "categories": ["Languages"],
   "activationEvents": [
     "onCommand:extension.open",
     "onCommand:extension.rebuild",
