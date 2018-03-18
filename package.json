@@ -17,7 +17,7 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "keywords": ["bundle", "bundler", "gem", "gemfile", "rails", "ruby", "rubygem", "rubygems"],
+  "keywords": ["bundler", "gem", "gemfile", "rails", "ruby"],
   "categories": ["Languages"],
   "activationEvents": [
     "onCommand:extension.open",
