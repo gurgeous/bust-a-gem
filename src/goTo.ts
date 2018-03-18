@@ -184,7 +184,8 @@ async function guard<T>(returnOnError: T, f: () => Promise<T>): Promise<T> {
 
     if (message.match(/command not found/)) {
       noWhine.onError();
-      message = 'Go To Definition requires the ripper-tags gem.';
+      message =
+        'ripper-tags not found (see [Installation](https://marketplace.visualstudio.com/items?itemName=gurgeous.bust-a-gem#user-content-installation)).';
     }
 
     console.error(error);
