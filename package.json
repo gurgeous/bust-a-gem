@@ -1,85 +1,93 @@
 {
-  "name": "bust-a-gem",
-  "displayName": "Bust A Gem",
-  "version": "0.0.1",
-  "publisher": "gurgeous",
-  "description": "Go to Definition for Ruby, and quickly open gems.",
-  "icon": "images/icon.png",
-  "galleryBanner": {
-    "color": "#e9573f",
-    "theme": "dark"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gurgeous/bust-a-gem.git"
-  },
-  "engines": {
-    "vscode": "^1.21.0"
-  },
-  "keywords": ["bundler", "gem", "gemfile", "rails", "ruby"],
-  "categories": ["Languages"],
-  "activationEvents": [
-    "onCommand:extension.open",
-    "onCommand:extension.rebuild",
-    "onLanguage:ruby"
-  ],
-  "main": "./out/extension",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.open",
-        "title": "Bust-A-Gem: Open Gem..."
-      },
-      {
-        "command": "extension.rebuild",
-        "title": "Bust-A-Gem: Rebuild Tags"
-      }
+    "name": "bust-a-gem",
+    "displayName": "Bust A Gem",
+    "version": "0.1.0",
+    "publisher": "gurgeous",
+    "description": "Go to Definition for Ruby, and quickly open gems.",
+    "icon": "images/icon.png",
+    "galleryBanner": {
+        "color": "#e9573f",
+        "theme": "dark"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gurgeous/bust-a-gem.git"
+    },
+    "engines": {
+        "vscode": "^1.21.0"
+    },
+    "keywords": [
+        "bundler",
+        "gem",
+        "gemfile",
+        "rails",
+        "ruby"
     ],
-    "configuration": {
-      "title": "Bust-A-Gem settings",
-      "properties": {
-        "bustagem.cmd.bundle": {
-          "type": "string",
-          "default": "bundle show --paths",
-          "description": "Bundler command to list gem paths."
-        },
-        "bustagem.cmd.rip": {
-          "type": "string",
-          "default": "ripper-tags -f TAGS -R",
-          "description": "Command to create TAGS File."
-        },
-        "bustagem.gems": {
-          "type": "array",
-          "description": "List of gems to index when building TAGS.",
-          "items": {
-            "type": "string"
-          }
+    "categories": [
+        "Languages"
+    ],
+    "activationEvents": [
+        "onCommand:extension.open",
+        "onCommand:extension.rebuild",
+        "onLanguage:ruby"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.open",
+                "title": "Bust-A-Gem: Open Gem..."
+            },
+            {
+                "command": "extension.rebuild",
+                "title": "Bust-A-Gem: Rebuild Tags"
+            }
+        ],
+        "configuration": {
+            "title": "Bust-A-Gem settings",
+            "properties": {
+                "bustagem.cmd.bundle": {
+                    "type": "string",
+                    "default": "bundle show --paths",
+                    "description": "Bundler command to list gem paths."
+                },
+                "bustagem.cmd.rip": {
+                    "type": "string",
+                    "default": "ripper-tags -f TAGS -R",
+                    "description": "Command to create TAGS File."
+                },
+                "bustagem.gems": {
+                    "type": "array",
+                    "description": "List of gems to index when building TAGS.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "tslint": "^5.8.0",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    },
+    "prettier": {
+        "printWidth": 100,
+        "singleQuote": true,
+        "trailingComma": "es5"
+    },
+    "dependencies": {
+        "@types/lodash": "^4.14.105",
+        "lodash": "^4.17.5"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test"
-  },
-  "devDependencies": {
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.6",
-    "tslint": "^5.8.0",
-    "@types/node": "^7.0.43",
-    "@types/mocha": "^2.2.42"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "dependencies": {
-    "@types/lodash": "^4.14.105",
-    "lodash": "^4.17.5"
-  }
 }
