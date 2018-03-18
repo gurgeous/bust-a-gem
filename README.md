@@ -27,7 +27,7 @@ Second, Bust A Gem uses the excellent [ripper-tags](https://github.com/tmm1/ripp
 
 #### Alternate ripper-tags installation
 
-Add `gem ripper-tags` to your Gemfile and run `bundle install`. In VS Code Settings, set `bustagem.cmd.rip` to `bundle exec ripper-tags -f TAGS -R` to use bundler.
+Add `gem ripper-tags` to your Gemfile and run `bundle install`. In VS Code Settings, set `bustagem.cmd.rip` to `bundle exec ripper-tags -f TAGS -R --force` to use bundler.
 
 ## Ripping
 
@@ -47,7 +47,7 @@ You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index 
 // The command used to list gems.
 "bustagem.cmd.bundle": "bundle show --paths",
 // The command used to create the TAGS file.
-"bustagem.cmd.rip": "ripper-tags -f TAGS -R",
+"bustagem.cmd.rip": "ripper-tags -f TAGS -R --force",
 ```
 
 ## Caveats and Troubleshooting
