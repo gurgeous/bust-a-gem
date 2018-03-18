@@ -22,19 +22,19 @@ class NoWhine {
   private errorAt = 0;
 
   // reset when the user rebuilds
-  reset = () => {
+  reset() {
     this.errorAt = 0;
-  };
+  }
 
   // should we bail early because an error occurred recently?
-  tooSoon = () => {
+  tooSoon() {
     return _.now() - this.errorAt < util.seconds(10);
-  };
+  }
 
   // note that an install error occurred
-  onError = () => {
+  onError() {
     this.errorAt = _.now();
-  };
+  }
 }
 
 let noWhine = new NoWhine();

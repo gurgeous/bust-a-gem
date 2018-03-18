@@ -23,13 +23,11 @@ markdown-toc --no-firsth1 --maxdepth 1 readme.md
 
 First, install the extension through VS Code extensions. Search for Bust A Gem.
 
-Second, Bust A Gem uses the excellent [ripper-tags](https://github.com/tmm1/ripper-tags) gem to build a TAGS file for your project. You have to install it so that VS Code can spawn it:
+Second, Bust A Gem uses the excellent [ripper-tags](https://github.com/tmm1/ripper-tags) gem to build a TAGS file for your project. Open an Integrated Terminal in VS Code (using `View > Integrated Terminal`) and run `gem install ripper-tags`. That should put ripper-tags into a spot where VS Code can spawn it. If you are still getting errors about ripper-tags, use `Help > Toggle Developer Tools` to see more debug info.
 
-```sh
-gem install ripper-tags
-```
+#### Alternate ripper-tags installation
 
-If you only want to use **"Open Gem..."**, there is no need to install `ripper-tags`.
+Add `gem ripper-tags` to your Gemfile and run `bundle install`. In VS Code Settings, set `bustagem.cmd.rip` to `bundle exec ripper-tags -f TAGS -R` to use bundler.
 
 ## Ripping
 
@@ -48,7 +46,7 @@ You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index 
 "bustagem.gems": [ "activerecord", "devise", ... ]
 // The command used to list gems.
 "bustagem.cmd.bundle": "bundle show --paths",
-// The command used to create TAGS file.
+// The command used to create the TAGS file.
 "bustagem.cmd.rip": "ripper-tags -f TAGS -R",
 ```
 
@@ -56,11 +54,9 @@ You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index 
 
 A few notes from my experience so far:
 
-* Not (yet) tested on Linux or Windows.
+* Make sure VS Code can spawn ripper-tags. If you can't run ripper-tags from the VS Code Integrated Terminal, Bust A Gem can't either. See [Installation](#installation).
 
-* Make sure VS Code can spawn ripper-tags. If you can't run ripper-tags from the VS Code Terminal, Bust A Gem can't either. Bust A Gem will cd into your project before running ripper-tags, so if you are using rbenv/chruby/rvm, gem install into that Ruby.
-
-* It should be possible to add `ripper-tags` to your Gemfile, though I haven't tested that configuration personally. You may need to override `bustagem.cmd.rip` and add `bundle exec`.
+* Not tested on Linux or Windows.
 
 * Bust A Gem relies on bundler to list gems and figure out gem paths. Investigate `bundler show --paths` in your project if you can't get one of your gems to work.
 
