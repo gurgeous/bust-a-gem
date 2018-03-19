@@ -78,7 +78,7 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 
 #### 0.1.4 - March 19, 2018
 
-* Go to Definition supports modules (`ActionController::Base`), via ripper-tags `--extras=q`.
+* Go to Definition supports modules like `ActionController::Base`, via ripper-tags `--extra=q`.
 
 ## License
 
