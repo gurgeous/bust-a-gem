@@ -55,7 +55,9 @@ const provideDefinition = async (
   }
 
   return await guard<vscode.Definition>([], async () => {
-    const query = document.getText(document.getWordRangeAtPosition(position));
+    // similar to standard Ruby wordPattern, but allow :
+    const wordPattern = /(:?[A-Za-z][^-`~@#%^&()=+[{}|;'",<>/.*\]\s\\!?]*[!?]?)/;
+    const query = document.getText(document.getWordRangeAtPosition(position, wordPattern));
     return await provideDefinition0(query);
   });
 };

@@ -46,7 +46,7 @@
         },
         "bustagem.cmd.rip": {
           "type": "string",
-          "default": "ripper-tags -f TAGS -R --force",
+          "default": "ripper-tags -f TAGS -R --force --extra=q",
           "description": "Command to create TAGS File."
         },
         "bustagem.gems": {
