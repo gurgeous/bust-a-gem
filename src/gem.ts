@@ -35,7 +35,8 @@ export default class Gem {
   private _labelWithoutVersion: string | undefined;
 
   // List gems using bundle show --paths.
-  static async list(rootPath: string): Promise<Gem[]> {
+  static async list(): Promise<Gem[]> {
+    const rootPath = <string>vscode.workspace.rootPath;
     const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
     const options = { timeout: util.seconds(3), cwd: rootPath };
     const stdout = await util.exec(cmd, options);

@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import BustAGem from './bustAGem';
 import Gem from './gem';
 
 //
@@ -17,8 +16,7 @@ export const open = async () => {
 
 const open0 = async () => {
   // load gems, turn into QuickPickItems
-  const bustAGem = BustAGem.singleton();
-  const gems = await Gem.list(bustAGem.rootPath);
+  const gems = await Gem.list();
   const items = gems.map(gem => {
     return { label: gem.label, description: '', dir: gem.dir };
   });
