@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as open from './open';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import GoTo from './goTo';
 import Symbols from './symbols';
 
 //
@@ -27,9 +28,11 @@ export function activate(context: vscode.ExtensionContext) {
   // registration
   //
 
+  let goTo = new GoTo();
   let symbols = new Symbols();
 
   context.subscriptions.push(vscode.commands.registerCommand('extension.open', open.open));
-  context.subscriptions.push(vscode.commands.registerCommand('extension.rebuild', symbols.rebuild));
-  context.subscriptions.push(vscode.languages.registerDefinitionProvider('ruby', symbols));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.rebuild', goTo.rebuild));
+  context.subscriptions.push(vscode.languages.registerDefinitionProvider('ruby', goTo));
+  context.subscriptions.push(vscode.languages.registerDocumentSymbolProvider('ruby', symbols));
 }

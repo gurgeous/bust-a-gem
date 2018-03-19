@@ -15,11 +15,10 @@ const TAG_RE = /^([^\x7f]+)\x7f([^\x01]+)\x01([^,]+)/;
 
 export class Etags {
   readonly file: string;
-  readonly tags: Map<string, Tag[]>;
+  readonly tags = new Map<string, Tag[]>();
 
   constructor(file: string) {
     this.file = file;
-    this.tags = new Map();
   }
 
   // Run a query by looking up key in tags.
