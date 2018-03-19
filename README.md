@@ -17,6 +17,7 @@ markdown-toc --no-firsth1 --maxdepth 1 readme.md
 * [Settings](#settings)
 * [Caveats and Troubleshooting](#caveats-and-troubleshooting)
 * [Contributing](#contributing)
+* [Changelog](#changelog)
 * [License](#license)
 
 ## Installation
@@ -72,6 +73,12 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 1.  Open the repo directory in VS Code and **install the recommended VS Code extensions**. This is important, because we use tslint and prettier with our Typescript.
 1.  Make a code change and test it using F5 / Start Debugging. This is not hard, see the doc links above.
 1.  Create a branch and submit a PR!
+
+## Changelog
+
+#### 0.1.4 - March 19, 2018
+
+* Go to Definition supports modules (`ActionController::Base`), via ripper-tags `--extras=q`.
 
 ## License
 
