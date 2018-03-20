@@ -76,9 +76,10 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 
 ## Changelog
 
-#### 0.1.4 - March 19, 2018
+#### 0.1.5 - March 19, 2018
 
 * Go to Definition supports modules like `ActionController::Base`, via ripper-tags `--extra=q`.
+* Add comical support for Go to Symbol in File.
 
 ## License
 
