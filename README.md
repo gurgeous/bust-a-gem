@@ -2,7 +2,10 @@
 
 The Bust A Gem extension adds **"Go to Definition"** for Ruby projects in VS Code. It will create a TAGS file using the [ripper-tags](https://github.com/tmm1/ripper-tags) gem, and then use the tags for Go to Definition. Fast and easy.
 
-In addition, Bust A Gem adds an **"Open Gem..."** command for quickly opening a gem from your Gemfile. This opens a new window in VS Code.
+Bust A Gem provides two additional handy features:
+
+* An **"Open Gem..."** command for quickly opening a gem from your Gemfile. This opens a new window in VS Code.
+* Limited support for **"Go to Symbol in File..."** for Ruby projects.
 
 Note: Bust A Gem relies on bundler and only works with Ruby projects that have a `Gemfile`.
 
@@ -42,14 +45,11 @@ Bust A Gem doesn't rebuild TAGS automatically. Use the **"Rebuild"** command to 
 
 You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index your project. Add gem names to `bustagem.gems` to instruct Bust A Gem to add some of your gems to the TAGS file. Bust A Gem uses bundler and your Gemfile to find those gems. Don't forget to run **"Rebuild"** to rebuild the TAGS file!
 
-```json
-// The list of gems to index for the TAGS file.
-"bustagem.gems": [ "activerecord", "devise", ... ]
-// The command used to list gems.
-"bustagem.cmd.bundle": "bundle show --paths",
-// The command used to create the TAGS file.
-"bustagem.cmd.rip": "ripper-tags -f TAGS -R --force --extra=q",
-```
+| Settings            | Example                             | Notes                                    |
+| ------------------- | ----------------------------------- | ---------------------------------------- |
+| bustagem.gems       | `[ "activerecord", "devise", ... ]` | List of gems to index for the TAGS file. |
+| bustagem.cmd.bundle | `"bundle show --paths"`             | Command used to list gems.               |
+| bustagem.cmd.rip    | `"ripper-tags -f TAGS -R ..."`      | Command used to create the TAGS file.    |
 
 ## Caveats and Troubleshooting
 
@@ -78,8 +78,11 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 
 #### 0.1.5 - March 19, 2018
 
+* Experimental support for Go to Symbol in File.
+
+#### 0.1.4 - March 19, 2018
+
 * Go to Definition supports modules like `ActionController::Base`, via ripper-tags `--extra=q`.
-* Add comical support for Go to Symbol in File.
 
 ## License
 
