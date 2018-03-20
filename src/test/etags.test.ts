@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as testHelpers from './testHelpers';
 
-describe('etags', () => {
+describe('Etags', () => {
   it('loads', async () => {
     const etags = new Etags(testHelpers.fixtureFile('TAGS'));
     await etags.load();

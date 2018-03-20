@@ -5,7 +5,7 @@ import * as util from '../util';
 // turn off command logging
 util.setQuiet();
 
-describe('util', () => {
+describe('Util', () => {
   it('exec', async () => {
     // success
     const stdout = await util.exec('echo hello', {});

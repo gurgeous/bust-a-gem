@@ -15,6 +15,7 @@ describe('Gem', () => {
 
     const gems = await Gem.list();
     assert.equal(gems.length, 3);
+
     const gem = gems[0];
     assert.equal(gem.dir, '/gems/2.5.0/gems/awesome_print-1.8.0');
     assert.equal(gem.label, 'awesome_print-1.8.0');

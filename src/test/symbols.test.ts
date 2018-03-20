@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 
 describe('Symbols', () => {
   it('finds symbols', async () => {
-    // Create fake document. Much faster than calling openDocument.
+    // Create fake document. Saves 100ms vs calling openDocument.
     const document = <vscode.TextDocument>{
       getText: () => testHelpers.readFixture('something.rb'),
       uri: vscode.Uri.file('/ignore'),
