@@ -5,9 +5,11 @@ import * as vscode from 'vscode';
 
 describe('Symbols', () => {
   it('finds symbols', async () => {
-    const document = await vscode.workspace.openTextDocument(
-      testHelpers.fixtureFile('something.rb')
-    );
+    // Create fake document. Much faster than calling openDocument.
+    const document = <vscode.TextDocument>{
+      getText: () => testHelpers.readFixture('something.rb'),
+      uri: vscode.Uri.file('/ignore'),
+    };
 
     let symbols = new Symbols();
     const list = await symbols.provideDocumentSymbols(document, <vscode.CancellationToken>{});

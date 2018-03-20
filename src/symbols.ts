@@ -2,7 +2,11 @@ import * as vscode from 'vscode';
 
 //
 // This class handles Go to Symbol. This implementation is really lame but it
-// works fine.
+// works fine. We iterate line by line looking for some regular expressions.
+//
+// I thought it might be more efficient to search the entire document for each
+// regex (instead of line by line) but this turned out to be slower. Perhaps
+// because vscode takes a while to convert file offsets into Positioins.
 //
 
 const PATTERNS = [
@@ -13,7 +17,7 @@ const PATTERNS = [
   /^\s*(def\s+[A-Za-z][A-Za-z0-9._]*[!?]?)/,
 
   // attr_reader :hello, :world
-  /^\s*(attr_(?:accessor|reader|writer)\s+:[A-Za-z][^#]*)/,
+  /^\s*(attr_(?:accessor|reader|writer)\s+:[A-Za-z][^#\n]*)/,
 ];
 
 export class Symbols implements vscode.DocumentSymbolProvider {
@@ -36,7 +40,6 @@ export class Symbols implements vscode.DocumentSymbolProvider {
         }
       });
     });
-
     return symbols;
   };
 }
