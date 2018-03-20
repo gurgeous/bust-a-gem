@@ -1,5 +1,3 @@
-/* global describe, it, beforeEach, afterEach */
-
 import { open } from '../open';
 import * as assert from 'assert';
 import * as sinon from 'sinon';

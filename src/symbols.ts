@@ -28,7 +28,7 @@ export class Symbols implements vscode.DocumentSymbolProvider {
       PATTERNS.forEach(re => {
         const match = re.exec(line);
         if (match) {
-          const name = match[0].replace(/\s+/g, ' ');
+          const name = match[0].replace(/\s+/g, ' ').trim();
           const position = new vscode.Position(index, 0);
           const location = new vscode.Location(document.uri, position);
           const info = new vscode.SymbolInformation(name, vscode.SymbolKind.Function, '', location);
