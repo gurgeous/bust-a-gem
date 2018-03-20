@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as testHelpers from './testHelpers';
 import * as vscode from 'vscode';
 
-describe.only('Symbols', () => {
+describe('Symbols', () => {
   it('finds symbols', async () => {
     const document = await vscode.workspace.openTextDocument(
       testHelpers.fixtureFile('something.rb')
