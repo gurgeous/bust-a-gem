@@ -44,7 +44,7 @@ export class Gem {
     const options = { timeout: util.seconds(3), cwd: rootPath };
     const stdout = await util.exec(cmd, options);
     if (stdout.length === 0) {
-      throw new Error(`${cmd} didn't return anything.`);
+      throw new Error(`gem.list failed, ${cmd} didn't return anything.`);
     }
     const dirs = stdout.trim().split('\n');
     return dirs.map(dir => new Gem(dir));

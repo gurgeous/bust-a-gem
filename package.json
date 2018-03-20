@@ -75,8 +75,10 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.105",
     "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
+    "@types/sinon": "^4.3.0",
     "eslint": "^4.19.0",
     "eslint-plugin-mocha": "^4.12.1",
     "sinon": "^4.4.6",
@@ -90,7 +92,6 @@
     "trailingComma": "es5"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.105",
     "lodash": "^4.17.5"
   }
 }
