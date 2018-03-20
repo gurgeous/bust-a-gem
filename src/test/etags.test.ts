@@ -8,11 +8,11 @@ describe('Etags', () => {
     const etags = new Etags(testHelpers.fixtureFile('TAGS'));
     await etags.load();
 
-    const defs = etags.provideDefinition('memoize');
+    const defs = etags.provideDefinition('Hello');
     assert.notEqual(defs.length, 0);
 
     const def = <vscode.Location>defs[0];
-    assert(def.uri.path.includes('memoist'));
+    assert(def.uri.path.includes('something'));
     assert.notEqual(def.range.start, 0);
   });
 
