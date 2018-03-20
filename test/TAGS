@@ -1,0 +1,122 @@
+
+lib/memoist/core_ext/singleton_class.rb,69
+module KernelKernel3,0
+    def singleton_classsingleton_class6,0
+
+lib/memoist/version.rb,67
+module MemoistMemoist3,0
+  VERSION = '0.16.0'.freezeVERSION4,0
+
+lib/memoist.rb,1071
+module MemoistMemoist6,0
+  def self.extended(extender)extended7,0
+  def self.memoized_ivar_for(method_name, identifier = nil)memoized_ivar_for17,0
+  def self.unmemoized_method_for(method_name, identifier = nil)unmemoized_method_for21,0
+  def self.memoized_prefix(identifier = nil)memoized_prefix25,0
+  def self.unmemoized_prefix(identifier = nil)unmemoized_prefix33,0
+  def self.escape_punctuation(string)escape_punctuation41,0
+  def self.memoist_eval(klass, *args, &block)memoist_eval54,0
+  def self.extract_reload!(method, args)extract_reload!62,0
+  module InstanceMethodsInstanceMethods69,0
+    def memoize_allmemoize_all70,0
+    def unmemoize_allunmemoize_all74,0
+    def memoized_structs(names)memoized_structs78,0
+    def prime_cache(*method_names)prime_cache86,0
+    def flush_cache(*method_names)flush_cache96,0
+  MemoizedMethod = Struct.new(:memoized_method, :ivar, :arity)MemoizedMethod103,0
+  def all_memoized_structsall_memoized_structs105,0
+  def clear_structsclear_structs121,0
+  def memoize(*method_names)memoize125,0
+
+script/benchmark.rb,115
+class BenchyBenchy6,0
+  def arity_0arity_09,0
+  def arity_1(name)arity_114,0
+OBJECT = Benchy.newOBJECT20,0
+
+test/memoist_test.rb,4339
+class MemoistTest < Minitest::TestMemoistTest4,0
+  class CallCounterCallCounter5,0
+    def initializeinitialize6,0
+    def call(method_name)call10,0
+    def count(method_name)count15,0
+  class PersonPerson20,0
+    def initializeinitialize23,0
+    def name_callsname_calls27,0
+    def student_name_callsstudent_name_calls31,0
+    def name_query_callsname_query_calls35,0
+    def is_developer_callsis_developer_calls39,0
+    def age_callsage_calls43,0
+    def namename47,0
+    def name?name?52,0
+    def update(_name)update58,0
+    def ageage63,0
+    def sleep(hours = 8)sleep70,0
+    def sleep_callssleep_calls76,0
+    def update_attributes(_options = {})update_attributes80,0
+    def update_attributes_callsupdate_attributes_calls86,0
+    def memoize_protected_testmemoize_protected_test92,0
+    def is_developer?is_developer?99,0
+  class Student < PersonStudent106,0
+    def namename107,0
+  class Teacher < PersonTeacher114,0
+    def seniorityseniority115,0
+  class CompanyCompany121,0
+    attr_reader :name_callsname_calls122,0
+    def initializeinitialize123,0
+    def namename127,0
+  module RatesRates133,0
+    attr_reader :sales_tax_callssales_tax_calls136,0
+    def sales_tax(price)sales_tax137,0
+  class CalculatorCalculator145,0
+    attr_reader :fib_callsfib_calls149,0
+    def initializeinitialize150,0
+    def fib(n)fib154,0
+    def add_or_subtract(i, j, add)add_or_subtract165,0
+    def countercounter174,0
+  class BookBook181,0
+    STATUSES = %w[new used].freezeSTATUSES183,0
+    CLASSIFICATION = %w[fiction nonfiction].freezeCLASSIFICATION184,0
+    GENRES = %w[humor romance reference sci-fi classic philosophy].freezeGENRES185,0
+    attr_reader :title, :authortitle187,0
+    attr_reader :title, :authorauthor187,0
+    def initialize(title, author)initialize188,0
+    def full_titlefull_title193,0
+      def all_typesall_types201,0
+  class AbbAbb208,0
+    def run(*_args)run211,0
+    def executeexecute216,0
+    def some_methodsome_method220,0
+  class Bbb < AbbBbb225,0
+    def some_methodsome_method226,0
+  def setupsetup232,0
+  def test_memoizationtest_memoization238,0
+  def test_memoize_with_optional_argumentstest_memoize_with_optional_arguments246,0
+  def test_memoize_with_options_hashtest_memoize_with_options_hash257,0
+  def test_memoization_with_punctuationtest_memoization_with_punctuation268,0
+  def test_memoization_flush_with_punctuationtest_memoization_flush_with_punctuation275,0
+  def test_memoization_with_nil_valuetest_memoization_with_nil_value282,0
+  def test_reloadabletest_reloadable290,0
+  def test_flush_cachetest_flush_cache298,0
+  def test_class_flush_cachetest_class_flush_cache308,0
+  def test_class_flush_cache_preserves_instancestest_class_flush_cache_preserves_instances318,0
+  def test_flush_cache_in_child_classtest_flush_cache_in_child_class328,0
+  def test_unmemoize_alltest_unmemoize_all335,0
+  def test_all_memoized_structstest_all_memoized_structs346,0
+  def test_unmemoize_all_subclassestest_unmemoize_all_subclasses367,0
+  def test_memoize_alltest_memoize_all391,0
+  def test_memoize_all_subclassestest_memoize_all_subclasses396,0
+  def test_memoization_cache_is_different_for_each_instancetest_memoization_cache_is_different_for_each_instance415,0
+  def test_memoization_class_variablestest_memoization_class_variables421,0
+  def test_memoized_is_not_affected_by_freezetest_memoized_is_not_affected_by_freeze431,0
+  def test_memoization_with_argstest_memoization_with_args437,0
+  def test_reloadable_with_argstest_reloadable_with_args442,0
+  def test_memoization_with_boolean_argtest_memoization_with_boolean_arg451,0
+  def test_object_memoizationtest_object_memoization456,0
+  def test_memoized_module_methodstest_memoized_module_methods468,0
+  def test_object_memoized_module_methodstest_object_memoized_module_methods477,0
+  def test_double_memoization_with_identifiertest_double_memoization_with_identifier489,0
+  def test_memoization_with_a_subclasstest_memoization_with_a_subclass515,0
+  def test_memoization_is_chainabletest_memoization_is_chainable523,0
+  def test_protected_method_memoizationtest_protected_method_memoization534,0
+  def test_private_method_memoizationtest_private_method_memoization541,0

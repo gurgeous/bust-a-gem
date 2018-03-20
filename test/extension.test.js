@@ -1,24 +1,35 @@
-/* global suite, test */
+/* global describe it */
 
-//
-// Note: This example test is leveraging the Mocha test framework.
-// Please refer to their documentation on https://mochajs.org/ for help.
-//
-
-// The module 'assert' provides assertion methods from node
 const assert = require('assert');
+const path = require('path');
+const { Etags } = require('../out/etags');
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-// const vscode = require('vscode');
-// const myExtension = require('../extension');
+//
+// Etags
+//
 
-// Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", function() {
+describe('etags', () => {
+  it('load and query TAGS', done => {
+    const file = path.join(__dirname, 'TAGS');
+    const etags = new Etags(file);
+    etags.load().then(() => {
+      const tags = etags.provideDefinition('memoize');
+      assert(tags.length !== 0);
+      assert(tags[0].uri.path.includes('memoist'));
+      assert(tags[0].range.line !== 0);
+      done();
+    }, done);
+  });
 
-    // Defines a Mocha unit test
-    test("Something 1", function() {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(-1, [1, 2, 3].indexOf(0));
-    });
+  it('throws on corrupt file', done => {
+    const file = path.join(__dirname, 'index.js');
+    new Etags(file).load().then(
+      () => {
+        done(new Error('etags loaded a corrupt file'));
+      },
+      () => {
+        done(); // rejected, success!
+      }
+    );
+  });
 });

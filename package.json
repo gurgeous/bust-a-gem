@@ -17,8 +17,16 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "keywords": ["bundler", "gem", "gemfile", "rails", "ruby"],
-  "categories": ["Languages"],
+  "keywords": [
+    "bundler",
+    "gem",
+    "gemfile",
+    "rails",
+    "ruby"
+  ],
+  "categories": [
+    "Languages"
+  ],
   "activationEvents": [
     "onCommand:extension.open",
     "onCommand:extension.rebuild",
@@ -67,11 +75,13 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.6",
-    "tslint": "^5.8.0",
+    "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
-    "@types/mocha": "^2.2.42"
+    "eslint": "^4.19.0",
+    "eslint-plugin-mocha": "^4.12.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1",
+    "vscode": "^1.1.6"
   },
   "prettier": {
     "printWidth": 100,

@@ -11,7 +11,9 @@
     },
     "sourceType": "module"
   },
+  "plugins": ["mocha"],
   "rules": {
+    "mocha/no-exclusive-tests": "error",
     "no-const-assign": "warn",
     "no-this-before-super": "warn",
     "no-undef": "warn",
