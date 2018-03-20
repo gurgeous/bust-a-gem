@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Gem from './gem';
+import { Gem } from './gem';
 
 //
 // Open Gem entry point. This is a try/catch wrapper around open0.

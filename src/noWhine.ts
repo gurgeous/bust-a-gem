@@ -6,7 +6,7 @@ import * as util from './util';
 // we showed an error recently. Try not to be annoying.
 //
 
-export default class NoWhine {
+export class NoWhine {
   // When did we last show the 'ripper-tags not found' error?
   private errorAt = 0;
 

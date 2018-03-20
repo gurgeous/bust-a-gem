@@ -16,7 +16,7 @@ const PATTERNS = [
   /^\s*(attr_(?:accessor|reader|writer)\s+:[A-Za-z][^#]*)/,
 ];
 
-export default class Symbols implements vscode.DocumentSymbolProvider {
+export class Symbols implements vscode.DocumentSymbolProvider {
   provideDocumentSymbols = async (
     document: vscode.TextDocument,
     token: vscode.CancellationToken

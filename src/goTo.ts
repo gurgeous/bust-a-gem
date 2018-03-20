@@ -5,14 +5,14 @@ import * as util from './util';
 import * as vscode from 'vscode';
 
 import { Etags } from './etags';
-import NoWhine from './noWhine';
-import Gem from './gem';
+import { NoWhine } from './noWhine';
+import { Gem } from './gem';
 
 //
 // This class handles Go to Definition and Rebuild.
 //
 
-export default class GoTo implements vscode.DefinitionProvider {
+export class GoTo implements vscode.DefinitionProvider {
   // Are we already running? We strive to avoid being reentrant because it will
   // result in nasty things like ripping TAGS twice simultaneously.
   running = false;

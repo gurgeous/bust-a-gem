@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import * as open from './open';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import GoTo from './goTo';
-import Symbols from './symbols';
+import { GoTo } from './goTo';
+import { Symbols } from './symbols';
 
 //
 // Extension activation

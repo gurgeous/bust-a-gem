@@ -6,12 +6,15 @@ import * as vscode from 'vscode';
 // Gem class that knows where a gem lives and its label.
 //
 
-export default class Gem {
+export class Gem {
   // where is the gem?
   readonly dir: string;
 
   constructor(dir: string) {
     this.dir = dir;
+    if (!dir.startsWith('/')) {
+      throw new Error(`gem.list failed, line '${dir}'`);
+    }
   }
 
   // What is this gem called?
@@ -40,10 +43,10 @@ export default class Gem {
     const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
     const options = { timeout: util.seconds(3), cwd: rootPath };
     const stdout = await util.exec(cmd, options);
-    const dirs = stdout.trim().split('\n');
-    if (dirs.length === 0) {
+    if (stdout.length === 0) {
       throw new Error(`${cmd} didn't return anything.`);
     }
+    const dirs = stdout.trim().split('\n');
     return dirs.map(dir => new Gem(dir));
   }
 }
