@@ -23,11 +23,10 @@ const open0 = async () => {
 
   // show quick picks, then open that folder
   const options = { placeHolder: 'Select a gem to open' };
-  vscode.window.showQuickPick(items, options).then(selection => {
-    if (!selection) {
-      return;
-    }
-    const uri = vscode.Uri.file(selection.dir);
-    vscode.commands.executeCommand('vscode.openFolder', uri, true);
-  });
+  const selection = await vscode.window.showQuickPick(items, options);
+  if (!selection) {
+    return;
+  }
+  const uri = vscode.Uri.file(selection.dir);
+  vscode.commands.executeCommand('vscode.openFolder', uri, true);
 };

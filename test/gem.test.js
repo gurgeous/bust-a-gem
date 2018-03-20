@@ -7,30 +7,30 @@ const path = require('path');
 const sinon = require('sinon');
 const util = require('../out/util');
 
-//
-// sinon sandbox
-//
-
 describe('Gem', () => {
   let sandbox;
   beforeEach(() => (sandbox = sinon.sandbox.create()));
   afterEach(() => sandbox.restore());
 
-  it('Gem.list works', done => {
+  it('Gem.list', done => {
     const fixture = path.join(__dirname, 'fixtures/gemlist');
     const gemlist = fs.readFileSync(fixture, { encoding: 'utf8' });
     sandbox.stub(util, 'exec').resolves(gemlist);
 
     Gem.list().then(gems => {
-      assert(gems.length === 3);
-      assert.equal(gems[0].dir, '/gems/2.5.0/gems/awesome_print-1.8.0');
-      assert.equal(gems[0].label, 'awesome_print-1.8.0');
-      assert.equal(gems[0].labelWithoutVersion, 'awesome_print');
-      done();
+      try {
+        assert(gems.length === 3);
+        assert.equal(gems[0].dir, '/gems/2.5.0/gems/awesome_print-1.8.0');
+        assert.equal(gems[0].label, 'awesome_print-1.8.0');
+        assert.equal(gems[0].labelWithoutVersion, 'awesome_print');
+        done();
+      } catch (error) {
+        done(error);
+      }
     }, done);
   });
 
-  it('rejects on empty', done => {
+  it('Gem.list fails on empty', done => {
     sandbox.stub(util, 'exec').resolves('');
     Gem.list().then(
       () => done(new Error("Gem.list should've rejected, but didn't")),
