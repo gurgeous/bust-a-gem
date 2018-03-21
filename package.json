@@ -1,7 +1,7 @@
 {
   "name": "bust-a-gem",
   "displayName": "Bust A Gem",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "gurgeous",
   "description": "Go to Definition for Ruby, and quickly open gems.",
   "icon": "images/icon.png",
@@ -17,16 +17,8 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "keywords": [
-    "bundler",
-    "gem",
-    "gemfile",
-    "rails",
-    "ruby"
-  ],
-  "categories": [
-    "Languages"
-  ],
+  "keywords": ["bundler", "gem", "gemfile", "rails", "ruby"],
+  "categories": ["Languages"],
   "activationEvents": [
     "onCommand:extension.open",
     "onCommand:extension.rebuild",

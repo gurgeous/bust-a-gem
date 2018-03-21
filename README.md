@@ -76,6 +76,10 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 
 ## Changelog
 
+#### 0.1.6 - March 21, 2018
+
+* Added tests and fixed a few minor bugs that I doubt anyone noticed as this early stage.
+
 #### 0.1.5 - March 19, 2018
 
 * Experimental support for Go to Symbol in File.
