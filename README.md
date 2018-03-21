@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gurgeous/bust-a-gem.svg?branch=master)](https://travis-ci.org/gurgeous/bust-a-gem)
+
 # Bust A Gem for VS Code
 
 The Bust A Gem extension adds **"Go to Definition"** for Ruby projects in VS Code. It will create a TAGS file using the [ripper-tags](https://github.com/tmm1/ripper-tags) gem, and then use the tags for Go to Definition. Fast and easy.
