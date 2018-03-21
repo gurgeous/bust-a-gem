@@ -1,16 +1,19 @@
 
-something.rb,455
-module HelloHello1,0
-  class WorldWorld2,0
-    attr_reader :a, :ba3,0
-    attr_reader :a, :bb3,0
-    attr_writer :c, :dc=4,0
-    attr_writer :c, :dd=4,0
-    attr_accessor :e, :fe5,0
-    attr_accessor :e, :fe=5,0
-    attr_accessor :e, :ff5,0
-    attr_accessor :e, :ff=5,0
-    def self.class_methodclass_method7,0
-    def question?question?10,0
-    def exclamation!exclamation!13,0
-    def with_comment # commentwith_comment16,0
+something.rb,548
+module HelloHello2,0
+  class WorldWorld3,0
+  class WorldHello::World3,0
+    attr_reader :a, :ba4,0
+    attr_reader :a, :bb4,0
+    attr_writer :c, :dc=5,0
+    attr_writer :c, :dd=5,0
+    attr_accessor :e, :fe6,0
+    attr_accessor :e, :fe=6,0
+    attr_accessor :e, :ff6,0
+    attr_accessor :e, :ff=6,0
+    def a_real_methoda_real_method8,0
+    def self.class_methodclass_method13,0
+    def gubgub17,0
+    def question?question?21,0
+    def exclamation!exclamation!25,0
+    def with_comment # commentwith_comment29,0
