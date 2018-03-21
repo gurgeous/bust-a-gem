@@ -1,7 +1,9 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as sinon from 'sinon';
 import * as util from '../util';
+
 //
 // this hook runs before everything
 //
@@ -33,4 +35,13 @@ export const fixtureFile = (file: string) => {
 // read fixture file
 export const readFixture = (file: string) => {
   return fs.readFileSync(fixtureFile(file), { encoding: 'utf8' });
+};
+
+// make TAGS not found
+export const stubTagsNotExist = (sandbox: sinon.SinonSandbox) => {
+  const file = fixtureFile('TAGS');
+  return sandbox
+    .stub(fs, 'existsSync')
+    .withArgs(file)
+    .returns(false);
 };

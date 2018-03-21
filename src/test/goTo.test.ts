@@ -4,6 +4,7 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sinon from 'sinon';
+import * as testHelpers from './testHelpers';
 import * as vscode from 'vscode';
 
 describe('Go To Definition', () => {
@@ -57,8 +58,7 @@ describe('Go To Definition', () => {
   });
 
   it('tries to rip', async () => {
-    // make TAGS not found
-    sandbox.stub(fs, 'existsSync').returns(false);
+    const stub = testHelpers.stubTagsNotExist(sandbox);
 
     // go
     await goTo.provideDefinition0('gub');
@@ -94,6 +94,13 @@ describe('Go To Definition', () => {
       throw new Error('command not found');
     });
     assert(exec.secondCall.args[0].includes('[Installation]'));
+  });
+
+  it('rips gems', async () => {
+    // make TAGS not found
+    // sandbox.stub(fs, 'existsSync').returns(false);
+    // stub a gem list
+    // add a gem
   });
 
   // dirsToRip: translation for gems (with and without versions)
