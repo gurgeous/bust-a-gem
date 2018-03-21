@@ -2,9 +2,6 @@ import * as assert from 'assert';
 import * as testHelpers from './testHelpers';
 import * as util from '../util';
 
-// turn off command logging
-util.setQuiet();
-
 describe('Util', () => {
   it('exec', async () => {
     // success

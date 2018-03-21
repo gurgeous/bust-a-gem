@@ -6,14 +6,6 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 
-// provideDefinition picks up ::
-//
-// guard: don't be reentrant (running)
-// guard: errors should be displayed in the window
-// guard: 'command not found' translates to nice error
-//
-// don't whine too often
-
 describe('Go To Definition', () => {
   let sandbox: sinon.SinonSandbox;
   let document: vscode.TextDocument;
@@ -44,22 +36,22 @@ describe('Go To Definition', () => {
   // tests
   //
 
-  const checkDefinition = async (callSite: RegExp, defSite: RegExp) => {
-    const lines = document.getText().split('\n');
-    const callLineIndex = lines.findIndex(i => i.match(callSite) !== null);
-    const defLineIndex = lines.findIndex(i => i.match(defSite) !== null);
-
-    // assume offset 9 at call site
-    // 01234567890
-    // ......p gub
-    const position = new vscode.Position(callLineIndex, 9);
-
-    const definitions = <vscode.Location[]>await goTo.provideDefinition(document, position);
-    assert.equal(definitions.length, 1);
-    assert.equal(definitions[0].range.start.line, defLineIndex);
-  };
-
   it('provides definitions', async () => {
+    const checkDefinition = async (callSite: RegExp, defSite: RegExp) => {
+      const lines = document.getText().split('\n');
+      const callLineIndex = lines.findIndex(i => i.match(callSite) !== null);
+      const defLineIndex = lines.findIndex(i => i.match(defSite) !== null);
+
+      // assume offset 9 at call site
+      // 01234567890
+      // ......p gub
+      const position = new vscode.Position(callLineIndex, 9);
+
+      const definitions = <vscode.Location[]>await goTo.provideDefinition(document, position);
+      assert.equal(definitions.length, 1);
+      assert.equal(definitions[0].range.start.line, defLineIndex);
+    };
+
     await checkDefinition(/^\s+p gub/, /^\s+def gub/);
     await checkDefinition(/^\s+p Hello::World/, /^\s+class World/);
   });
@@ -72,9 +64,38 @@ describe('Go To Definition', () => {
     await goTo.provideDefinition0('gub');
 
     // did we try to rip?
-    assert.equal(exec.callCount, 1);
     const args = exec.firstCall.args;
     assert(args[0].startsWith('ripper-tags'));
     assert.equal(args[1].cwd, rootPath);
   });
+
+  it('guards against reentrant', async () => {
+    // this resolves after 5ms
+    goTo.guard(null, () => {
+      return new Promise((resolve, reject) => setTimeout(resolve, 5));
+    });
+
+    // guard shouldn't let this one run
+    let neverRan = true;
+    await goTo.guard(null, async () => (neverRan = false));
+    assert(neverRan);
+  });
+
+  it('displays errors', async () => {
+    // eat messages
+    exec = sandbox.stub(vscode.window, 'showErrorMessage');
+    await goTo.guard(null, async () => {
+      throw new Error('whatever');
+    });
+    assert(exec.firstCall.args[0].includes('whatever'));
+
+    // check for special install message
+    await goTo.guard(null, async () => {
+      throw new Error('command not found');
+    });
+    assert(exec.secondCall.args[0].includes('[Installation]'));
+  });
+
+  // dirsToRip: translation for gems (with and without versions)
+  // dirsToRip: skipping of unknown gem dirs
 });

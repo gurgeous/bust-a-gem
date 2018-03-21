@@ -50,7 +50,9 @@ export class GoTo implements vscode.DefinitionProvider {
           'ripper-tags not found (see [Installation](https://marketplace.visualstudio.com/items?itemName=gurgeous.bust-a-gem#user-content-installation)).';
       }
 
-      console.error(error);
+      if (!util.isQuiet) {
+        console.error(error);
+      }
       vscode.window.showErrorMessage(`Bust-A-Gem: ${message}`);
     }
 
@@ -136,7 +138,6 @@ export class GoTo implements vscode.DefinitionProvider {
     const dirs = unescapedDirs.map(i => `'${i}'`);
 
     // get ready
-    const tm = _.now();
     const rip = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');
     const cmd = `${rip} ${dirs.join(' ')}`;
 
@@ -148,7 +149,6 @@ export class GoTo implements vscode.DefinitionProvider {
     await vscode.window.withProgress(progressOptions, async () => {
       await util.exec(cmd, { cwd: this.rootPath });
     });
-    console.log(`ripper-tags success ${_.now() - tm}ms`);
   };
 
   //

@@ -1,6 +1,15 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as util from '../util';
+//
+// this hook runs before everything
+//
+
+before(() => {
+  // turn off command logging
+  util.setQuiet();
+});
 
 // assert.throws for async functions
 export const assertThrowsAsync = async (fn: any, regExp: RegExp) => {
