@@ -1,0 +1,5 @@
+{
+  "bustagem.cmd.bundle": "bundle show --paths",
+  "bustagem.cmd.rip": "ripper-tags -f TAGS -R --force --extra=q",
+  "bustagem.gems": []
+}

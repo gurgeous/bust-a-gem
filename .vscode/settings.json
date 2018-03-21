@@ -5,7 +5,8 @@
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
-    "out": false
+    ".vscode-test": true,
+    "out": true
   },
   "search.exclude": {
     "out": true

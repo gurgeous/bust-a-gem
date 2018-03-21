@@ -2,15 +2,14 @@ import * as fs from 'fs';
 import * as open from './open';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import GoTo from './goTo';
-import Symbols from './symbols';
+import { GoTo } from './goTo';
+import { Symbols } from './symbols';
 
 //
 // Extension activation
 //
 
-export function activate(context: vscode.ExtensionContext) {
-  // sanity checking
+const sanity = () => {
   try {
     if (!vscode.workspace.rootPath) {
       throw new Error('you must open a directory, not a file.');
@@ -21,12 +20,19 @@ export function activate(context: vscode.ExtensionContext) {
   } catch (error) {
     console.error(error);
     vscode.window.showErrorMessage(`Bust-A-Gem: ${error.message}`);
+    return false;
+  }
+  return true;
+};
+
+//
+// Activation. This gets called exactly once by VS Vode.
+//
+
+export function activate(context: vscode.ExtensionContext) {
+  if (!sanity()) {
     return;
   }
-
-  //
-  // registration
-  //
 
   let goTo = new GoTo();
   let symbols = new Symbols();

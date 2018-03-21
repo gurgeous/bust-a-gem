@@ -5,14 +5,14 @@ import * as util from './util';
 import * as vscode from 'vscode';
 
 import { Etags } from './etags';
-import NoWhine from './noWhine';
-import Gem from './gem';
+import { NoWhine } from './noWhine';
+import { Gem } from './gem';
 
 //
 // This class handles Go to Definition and Rebuild.
 //
 
-export default class GoTo implements vscode.DefinitionProvider {
+export class GoTo implements vscode.DefinitionProvider {
   // Are we already running? We strive to avoid being reentrant because it will
   // result in nasty things like ripping TAGS twice simultaneously.
   running = false;
@@ -50,7 +50,9 @@ export default class GoTo implements vscode.DefinitionProvider {
           'ripper-tags not found (see [Installation](https://marketplace.visualstudio.com/items?itemName=gurgeous.bust-a-gem#user-content-installation)).';
       }
 
-      console.error(error);
+      if (!util.isQuiet) {
+        console.error(error);
+      }
       vscode.window.showErrorMessage(`Bust-A-Gem: ${message}`);
     }
 
@@ -136,7 +138,6 @@ export default class GoTo implements vscode.DefinitionProvider {
     const dirs = unescapedDirs.map(i => `'${i}'`);
 
     // get ready
-    const tm = _.now();
     const rip = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');
     const cmd = `${rip} ${dirs.join(' ')}`;
 
@@ -148,7 +149,6 @@ export default class GoTo implements vscode.DefinitionProvider {
     await vscode.window.withProgress(progressOptions, async () => {
       await util.exec(cmd, { cwd: this.rootPath });
     });
-    console.log(`ripper-tags success ${_.now() - tm}ms`);
   };
 
   //
@@ -156,13 +156,13 @@ export default class GoTo implements vscode.DefinitionProvider {
   // bustagem.gems config and turn them into directories to rip.
   //
 
-  dirsToRip = async (): Promise<string[]> => {
+  dirsToRip = async (gemNames?: string[]): Promise<string[]> => {
     const dirs = ['.'];
-    const gemNames = <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
-    if (gemNames.length !== 0) {
+    const names = gemNames || <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
+    if (names.length !== 0) {
       const gems = await Gem.list();
       const map = Object.assign(_.keyBy(gems, 'label'), _.keyBy(gems, 'labelWithoutVersion'));
-      for (const name of gemNames) {
+      for (const name of names) {
         const g = map[name];
         if (!g) {
           // bad gem name - not fatal

@@ -1,17 +1,37 @@
 import * as child_process from 'child_process';
+import * as _ from 'lodash';
+
+//
+// quiet - only used for test
+//
+
+let quiet = false;
+export const setQuiet = () => {
+  quiet = true;
+};
+export const isQuiet = () => {
+  return quiet;
+};
 
 // Promise adapter for child_process.exec
 export const exec = (command: string, options: child_process.ExecOptions): Promise<string> => {
   return new Promise((resolve, reject) => {
-    if (options.cwd) {
-      console.log(`Running ${command} in ${options.cwd}...`);
-    } else {
-      console.log(`Running ${command}...`);
+    if (!isQuiet()) {
+      if (options.cwd) {
+        console.log(`Running ${command} in ${options.cwd}...`);
+      } else {
+        console.log(`Running ${command}...`);
+      }
     }
+
+    const tm = _.now();
     child_process.exec(command, options, (error, stdout, stderr) => {
       if (error) {
         reject(error);
       } else {
+        if (!isQuiet()) {
+          console.log(`success, ${_.now() - tm}ms`);
+        }
         resolve(stdout);
       }
     });

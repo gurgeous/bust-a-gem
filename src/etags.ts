@@ -59,6 +59,9 @@ export class Etags {
 
     return new Promise((resolve, reject) => {
       const input = fs.createReadStream(this.file, { encoding: 'utf8' });
+      input.on('error', (error: Error) => {
+        reject(error);
+      });
       const lineReader = readline.createInterface({ input });
 
       const onLine = (line: string) => {
