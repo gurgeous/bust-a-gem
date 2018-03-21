@@ -1,7 +1,5 @@
 import { GoTo } from '../goTo';
 import * as assert from 'assert';
-import * as child_process from 'child_process';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as sinon from 'sinon';
 import * as testHelpers from './testHelpers';
@@ -27,8 +25,11 @@ describe('Go To Definition', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    // never exec
-    exec = sandbox.stub(child_process, 'exec').callsArgWith(2, null, 'stdout');
+
+    // stub exec for sandbox & ripper-tags
+    exec = testHelpers.stubGemList(sandbox);
+    testHelpers.stubRipperTags(sandbox, exec);
+
     goTo = new GoTo();
   });
   afterEach(() => sandbox.restore());
@@ -58,7 +59,7 @@ describe('Go To Definition', () => {
   });
 
   it('tries to rip', async () => {
-    const stub = testHelpers.stubTagsNotExist(sandbox);
+    testHelpers.stubTagsNotExist(sandbox);
 
     // go
     await goTo.provideDefinition0('gub');
@@ -83,26 +84,38 @@ describe('Go To Definition', () => {
 
   it('displays errors', async () => {
     // eat messages
-    exec = sandbox.stub(vscode.window, 'showErrorMessage');
+    const showErrorMessage = sandbox.stub(vscode.window, 'showErrorMessage');
     await goTo.guard(null, async () => {
       throw new Error('whatever');
     });
-    assert(exec.firstCall.args[0].includes('whatever'));
+    assert(showErrorMessage.firstCall.args[0].includes('whatever'));
 
     // check for special install message
     await goTo.guard(null, async () => {
       throw new Error('command not found');
     });
-    assert(exec.secondCall.args[0].includes('[Installation]'));
+    assert(showErrorMessage.secondCall.args[0].includes('[Installation]'));
   });
 
-  it('rips gems', async () => {
-    // make TAGS not found
-    // sandbox.stub(fs, 'existsSync').returns(false);
-    // stub a gem list
-    // add a gem
-  });
+  it('dirsToRip resolves gems', async () => {
+    // eat messages
+    const showWarningMessage = sandbox.stub(vscode.window, 'showWarningMessage');
 
-  // dirsToRip: translation for gems (with and without versions)
-  // dirsToRip: skipping of unknown gem dirs
+    let dirs;
+
+    // short label
+    dirs = await goTo.dirsToRip(['memoist']);
+    assert.equal(dirs.length, 2);
+    assert(dirs[1].match(/memoist/));
+
+    // label with version
+    dirs = await goTo.dirsToRip(['memoist-0.16.0']);
+    assert.equal(dirs.length, 2);
+    assert(dirs[1].match(/memoist/));
+
+    // bogus names are ignored
+    dirs = await goTo.dirsToRip(['bogus']);
+    assert.equal(dirs.length, 1);
+    assert(showWarningMessage.firstCall.args[0].includes('bogus'));
+  });
 });

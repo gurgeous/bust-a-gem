@@ -1,8 +1,10 @@
 import * as assert from 'assert';
+import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sinon from 'sinon';
 import * as util from '../util';
+import * as vscode from 'vscode';
 
 //
 // this hook runs before everything
@@ -38,10 +40,30 @@ export const readFixture = (file: string) => {
 };
 
 // make TAGS not found
-export const stubTagsNotExist = (sandbox: sinon.SinonSandbox) => {
+export const stubTagsNotExist = (sandbox: sinon.SinonSandbox, stub?: sinon.SinonStub) => {
   const file = fixtureFile('TAGS');
-  return sandbox
-    .stub(fs, 'existsSync')
-    .withArgs(file)
-    .returns(false);
+  const applyTo = stub || sandbox.stub(fs, 'existsSync');
+  applyTo.withArgs(file).returns(false);
+  return applyTo;
+};
+
+// stub out all of child_process / exec
+export const stubRipperTags = (sandbox: sinon.SinonSandbox, stub?: sinon.SinonStub) => {
+  const applyTo = stub || sandbox.stub(child_process, 'exec');
+  applyTo.callsArgWith(2, null, 'stdout');
+  return applyTo;
+};
+
+// make bundle show --paths return the contents of gemlist
+export const stubGemList = (sandbox: sinon.SinonSandbox, stub?: sinon.SinonStub) => {
+  const applyTo = stub || sandbox.stub(child_process, 'exec');
+
+  // copied from Gem.list
+  const rootPath = <string>vscode.workspace.rootPath;
+  const cmd = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('bundle');
+  const options = { timeout: util.seconds(3), cwd: rootPath };
+
+  const gemlist = readFixture('gemlist');
+  applyTo.withArgs(cmd, options).callsArgWith(2, null, gemlist);
+  return applyTo;
 };

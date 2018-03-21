@@ -10,8 +10,7 @@ describe('Gem', () => {
   afterEach(() => sandbox.restore());
 
   it('lists gems', async () => {
-    const gemlist = testHelpers.readFixture('gemlist');
-    sandbox.stub(util, 'exec').resolves(gemlist);
+    testHelpers.stubGemList(sandbox);
 
     const gems = await Gem.list();
     assert.equal(gems.length, 3);

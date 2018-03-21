@@ -30,7 +30,7 @@ export class Gem {
   get labelWithoutVersion() {
     if (!this._labelWithoutVersion) {
       // attempt to strip off version info for labelWithoutVersion
-      const match = this.label.match(/^(.*)-\d+(\.\d)+$/);
+      const match = this.label.match(/^(.*)-\d+(\.\d+)+$/);
       this._labelWithoutVersion = match ? match[1] : this.label;
     }
     return this._labelWithoutVersion;

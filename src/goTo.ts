@@ -156,13 +156,13 @@ export class GoTo implements vscode.DefinitionProvider {
   // bustagem.gems config and turn them into directories to rip.
   //
 
-  dirsToRip = async (): Promise<string[]> => {
+  dirsToRip = async (gemNames?: string[]): Promise<string[]> => {
     const dirs = ['.'];
-    const gemNames = <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
-    if (gemNames.length !== 0) {
+    const names = gemNames || <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
+    if (names.length !== 0) {
       const gems = await Gem.list();
       const map = Object.assign(_.keyBy(gems, 'label'), _.keyBy(gems, 'labelWithoutVersion'));
-      for (const name of gemNames) {
+      for (const name of names) {
         const g = map[name];
         if (!g) {
           // bad gem name - not fatal
