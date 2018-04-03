@@ -26,17 +26,6 @@ export class Gem {
   }
   private _label: string | undefined;
 
-  // Label without the version, if possible.
-  get labelWithoutVersion() {
-    if (!this._labelWithoutVersion) {
-      // attempt to strip off version info for labelWithoutVersion
-      const match = this.label.match(/^(.*)-\d+(\.\d+)+$/);
-      this._labelWithoutVersion = match ? match[1] : this.label;
-    }
-    return this._labelWithoutVersion;
-  }
-  private _labelWithoutVersion: string | undefined;
-
   // List gems using bundle show --paths.
   static async list(): Promise<Gem[]> {
     const rootPath = <string>vscode.workspace.rootPath;

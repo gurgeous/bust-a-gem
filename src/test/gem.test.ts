@@ -18,7 +18,6 @@ describe('Gem', () => {
     const gem = gems[0];
     assert.equal(gem.dir, '/gems/2.5.0/gems/awesome_print-1.8.0');
     assert.equal(gem.label, 'awesome_print-1.8.0');
-    assert.equal(gem.labelWithoutVersion, 'awesome_print');
   });
 
   it('fails on invalid gem lists', async () => {

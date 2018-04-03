@@ -20,6 +20,6 @@ describe('Open Gem', () => {
     assert.equal(showQuickPick.callCount, 1);
     const items = <vscode.QuickPickItem[]>showQuickPick.firstCall.args[0];
     const labels = items.map(i => i.label);
-    assert.deepEqual(labels, ['awesome_print-1.8.0', 'memoist-0.16.0', 'uglifier-4.1.6']);
+    assert.deepEqual(labels, ['awesome_print-1.8.0', 'memoist-0.16.0', 'uglifier-4.1.6-rc.2']);
   });
 });

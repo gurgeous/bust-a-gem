@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from './util';
@@ -161,17 +160,21 @@ export class GoTo implements vscode.DefinitionProvider {
     const names = gemNames || <string[]>vscode.workspace.getConfiguration('bustagem').get('gems');
     if (names.length !== 0) {
       const gems = await Gem.list();
-      const map = Object.assign(_.keyBy(gems, 'label'), _.keyBy(gems, 'labelWithoutVersion'));
       for (const name of names) {
-        const g = map[name];
-        if (!g) {
+        // find gem
+        let found = false;
+        for (const gem of gems) {
+          if (gem.label.startsWith(name)) {
+            found = true;
+            dirs.push(gem.dir);
+          }
+        }
+        if (!found) {
           // bad gem name - not fatal
           vscode.window.showWarningMessage(
             `you asked me to index gem '${name}', but I can't find it. Skipping.`
           );
-          continue;
         }
-        dirs.push(g.dir);
       }
     }
     return dirs;
