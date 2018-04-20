@@ -56,6 +56,7 @@ describe('Go To Definition', () => {
 
     await checkDefinition(/^\s+p gub/, /^\s+def gub/);
     await checkDefinition(/^\s+p Hello::World/, /^\s+class World/);
+    await checkDefinition(/^\s+p ::Hello::World/, /^\s+class World/);
   });
 
   it('tries to rip', async () => {

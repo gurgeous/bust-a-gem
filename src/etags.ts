@@ -24,7 +24,7 @@ export class Etags {
   // Run a query by looking up key in tags.
   provideDefinition(key: string): vscode.Location[] {
     const base = path.dirname(this.file);
-    const list = this.tags.get(key);
+    const list = this.tags.get(key.replace(/^::/, ''));
     if (!list) {
       return [];
     }
