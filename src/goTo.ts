@@ -78,7 +78,7 @@ export class GoTo implements vscode.DefinitionProvider {
 
     return await this.guard([], async () => {
       // similar to standard Ruby wordPattern, but allow :
-      const wordPattern = /(:?[A-Za-z][^-`~@#%^&()=+[{}|;'",<>/.*\]\s\\!?]*[!?]?)/;
+      const wordPattern = /((::|)?[A-Za-z][^-`~@#%^&()=+[{}|;:'",<>/.*\]\s\\!?]*[!?]?)/;
       const query = document.getText(document.getWordRangeAtPosition(position, wordPattern));
       return await this.provideDefinition0(query);
     });
