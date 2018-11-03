@@ -42,12 +42,10 @@ export class Symbols implements vscode.DocumentSymbolProvider {
       PATTERNS.forEach(re => {
         const match = re.exec(line);
         if (match) {
-          const splitted = match[0]
-            .replace(/\s+/g, ' ')
-            .trim()
-            .split(' ');
-          const kind = splitted[0];
-          const name = splitted[1];
+          const cleanLine = match[0].replace(/\s+/g, ' ').trim();
+          const kind = cleanLine.split(' ')[0];
+          // use +1 to exclude the space in the beginning
+          const name = cleanLine.substring(kind.length + 1);
           const position = new vscode.Position(index, 0);
           const location = new vscode.Location(document.uri, position);
           const info = new vscode.SymbolInformation(name, KINDS[kind], '', location);
