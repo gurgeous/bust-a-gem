@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 //
 // I thought it might be more efficient to search the entire document for each
 // regex (instead of line by line) but this turned out to be slower. Perhaps
-// because vscode takes a while to convert file offsets into Positioins.
+// because vscode takes a while to convert file offsets into Positions.
 //
 
 const PATTERNS = [
@@ -20,6 +20,16 @@ const PATTERNS = [
   /^\s*(attr_(?:accessor|reader|writer)\s+:[A-Za-z][^#\n]*)/,
 ];
 
+interface IOptions {
+  [key: string]: vscode.SymbolKind;
+}
+
+const KINDS: IOptions = {
+  class: vscode.SymbolKind.Class,
+  module: vscode.SymbolKind.Module,
+  def: vscode.SymbolKind.Method,
+};
+
 export class Symbols implements vscode.DocumentSymbolProvider {
   provideDocumentSymbols = async (
     document: vscode.TextDocument,
@@ -32,10 +42,15 @@ export class Symbols implements vscode.DocumentSymbolProvider {
       PATTERNS.forEach(re => {
         const match = re.exec(line);
         if (match) {
-          const name = match[0].replace(/\s+/g, ' ').trim();
+          const splitted = match[0]
+            .replace(/\s+/g, ' ')
+            .trim()
+            .split(' ');
+          const kind = splitted[0];
+          const name = splitted[1];
           const position = new vscode.Position(index, 0);
           const location = new vscode.Location(document.uri, position);
-          const info = new vscode.SymbolInformation(name, vscode.SymbolKind.Function, '', location);
+          const info = new vscode.SymbolInformation(name, KINDS[kind], '', location);
           symbols.push(info);
         }
       });
