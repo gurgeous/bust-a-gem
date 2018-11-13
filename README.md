@@ -74,6 +74,12 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 1.  Install dependencies with `npm install`.
 1.  Open the repo directory in VS Code and **install the recommended VS Code extensions**. This is important, because we use tslint and prettier with our Typescript.
 1.  Make a code change and test it using F5 / Start Debugging. This is not hard, see the doc links above.
+1.  Do these steps **if you want** to test it with terminal or pass Travis CI:
+    - Close all VS Code
+    - Copy `src/test/fixtures/something.rb` to `./out/test/something.rb`
+    - Run `ripper-tags -f ./out/test/TAGS -R --force --extra=q ./out/test/something.rb`
+    - Update the test files accordingly
+    - Run `npm test`
 1.  Create a branch and submit a PR!
 
 ## Changelog
