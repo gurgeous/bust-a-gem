@@ -6,8 +6,8 @@ The Bust A Gem extension adds **"Go to Definition"** for Ruby projects in VS Cod
 
 Bust A Gem provides two additional handy features:
 
-* An **"Open Gem..."** command for quickly opening a gem from your Gemfile. This opens a new window in VS Code.
-* Limited support for **"Go to Symbol in File..."** for Ruby projects.
+- An **"Open Gem..."** command for quickly opening a gem from your Gemfile. This opens a new window in VS Code.
+- Limited support for **"Go to Symbol in File..."** for Ruby projects.
 
 Note: Bust A Gem relies on bundler and only works with Ruby projects that have a `Gemfile`.
 
@@ -17,13 +17,13 @@ markdown-toc --no-firsth1 --maxdepth 1 readme.md
 
 ## Table of Contents
 
-* [Installation](#installation)
-* [Ripping](#ripping)
-* [Settings](#settings)
-* [Caveats and Troubleshooting](#caveats-and-troubleshooting)
-* [Contributing](#contributing)
-* [Changelog](#changelog)
-* [License](#license)
+- [Installation](#installation)
+- [Ripping](#ripping)
+- [Settings](#settings)
+- [Caveats and Troubleshooting](#caveats-and-troubleshooting)
+- [Contributing](#contributing)
+- [Changelog](#changelog)
+- [License](#license)
 
 ## Installation
 
@@ -57,13 +57,13 @@ You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index 
 
 A few notes from my experience so far:
 
-* Make sure VS Code can spawn ripper-tags. If you can't run ripper-tags from the VS Code Integrated Terminal, Bust A Gem can't either. See [Installation](#installation).
+- Make sure VS Code can spawn ripper-tags. If you can't run ripper-tags from the VS Code Integrated Terminal, Bust A Gem can't either. See [Installation](#installation).
 
-* Not tested on Linux or Windows.
+- Not tested on Linux or Windows.
 
-* Bust A Gem relies on bundler to list gems and figure out gem paths. Investigate `bundler show --paths` in your project if you can't get one of your gems to work.
+- Bust A Gem relies on bundler to list gems and figure out gem paths. Investigate `bundler show --paths` in your project if you can't get one of your gems to work.
 
-* ripper-tags is fast. It only takes a second or two to rebuild TAGS for my project. If this is too slow for your needs, you may be able to switch to `ctags -e ...` using the `bustagem.cmd.rip` setting. ripper-tags is much better at ripping Ruby files. For example, ripper-tags indexes Ruby method aliases and ctags does not. But ctags is faster.
+- ripper-tags is fast. It only takes a second or two to rebuild TAGS for my project. If this is too slow for your needs, you may be able to switch to `ctags -e ...` using the `bustagem.cmd.rip` setting. ripper-tags is much better at ripping Ruby files. For example, ripper-tags indexes Ruby method aliases and ctags does not. But ctags is faster.
 
 ## Contributing
 
@@ -76,19 +76,22 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 1.  Make a code change and test it using F5 / Start Debugging. This is not hard, see the doc links above.
 1.  Create a branch and submit a PR!
 
+Sidenote - want to test in the terminal? You'll have to set an environment variable when running npm test, see below. I generally prefer to use F5 in vscode, which works without any fiddling.
+
+`CODE_TESTS_WORKSPACE=./src/test/fixtures npm test`
+
 ## Changelog
 
-#### 0.1.6 - March 21, 2018
+#### 0.1.7 - unreleased
 
-* Added tests and fixed a few minor bugs that I doubt anyone noticed as this early stage.
+- \#5 use specific SymbolKind for each symbol (thanks @
 
-#### 0.1.5 - March 19, 2018
 
-* Experimental support for Go to Symbol in File.
+#### 0.1.6 - March 2018
 
-#### 0.1.4 - March 19, 2018
-
-* Go to Definition supports modules like `ActionController::Base`, via ripper-tags `--extra=q`.
+- Added tests and fixed a few minor bugs that I doubt anyone noticed at this early stage.
+- Experimental support for Go to Symbol in File.
+- Go to Definition supports modules like `ActionController::Base`, via ripper-tags `--extra=q`.
 
 ## License
 

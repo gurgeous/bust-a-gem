@@ -15,17 +15,17 @@ describe('Symbols', () => {
     const list = await symbols.provideDocumentSymbols(document, <vscode.CancellationToken>{});
     const names = list.map(i => i.name);
     assert.deepEqual(names, [
-      'module Hello',
-      'class World',
-      'attr_reader :a, :b',
-      'attr_writer :c, :d',
-      'attr_accessor :e, :f',
-      'def a_real_method',
-      'def self.class_method',
-      'def gub',
-      'def question?',
-      'def exclamation!',
-      'def with_comment',
+      'Hello',
+      'World',
+      ':a, :b',
+      ':c, :d',
+      ':e, :f',
+      'a_real_method',
+      'self.class_method',
+      'gub',
+      'question?',
+      'exclamation!',
+      'with_comment',
     ]);
   });
 });
