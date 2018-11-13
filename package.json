@@ -17,8 +17,16 @@
   "engines": {
     "vscode": "^1.21.0"
   },
-  "keywords": ["bundler", "gem", "gemfile", "rails", "ruby"],
-  "categories": ["Languages"],
+  "keywords": [
+    "bundler",
+    "gem",
+    "gemfile",
+    "rails",
+    "ruby"
+  ],
+  "categories": [
+    "Languages"
+  ],
   "activationEvents": [
     "onCommand:extension.open",
     "onCommand:extension.rebuild",
@@ -77,7 +85,7 @@
     "sinon": "^4.4.6",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "vscode": "^1.1.21"
   },
   "prettier": {
     "printWidth": 100,
