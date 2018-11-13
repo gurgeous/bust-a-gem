@@ -82,12 +82,11 @@ Sidenote - want to test in the terminal? You'll have to set an environment varia
 
 ## Changelog
 
-#### 0.1.7 - unreleased
+#### 0.1.7 - Nov 12, 2018
 
-- \#5 use specific SymbolKind for each symbol (thanks @
+- #5 use specific SymbolKind for each symbol (thanks @feber)
 
-
-#### 0.1.6 - March 2018
+#### 0.1.6 - Mar 2018
 
 - Added tests and fixed a few minor bugs that I doubt anyone noticed at this early stage.
 - Experimental support for Go to Symbol in File.
