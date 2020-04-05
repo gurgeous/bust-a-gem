@@ -124,7 +124,19 @@ export class GoTo implements vscode.DefinitionProvider {
     }
 
     // now query
-    return this.etags.provideDefinition(query);
+    const initialDefinition = this.etags.provideDefinition(query);
+
+    if (initialDefinition.length !== 0) {
+      return initialDefinition;
+    } else if (query.charAt(0) === ':') {
+      // HACK ALERT
+      // try to handle case for constants with absolute namespace, for example:
+      // `::Some::Class` which will be passed in `query` here as a `:Some::Class`
+      // Check if `query` variable contains `:` as a first character before actually trying(performance)
+      return this.etags.provideDefinition(query.slice(1));
+    } else {
+      return [];
+    }
   };
 
   //
@@ -134,7 +146,7 @@ export class GoTo implements vscode.DefinitionProvider {
   rip = async (failSilently: boolean) => {
     // get dirs to rip from config
     const unescapedDirs = await this.dirsToRip();
-    const dirs = unescapedDirs.map(i => `'${i}'`);
+    const dirs = unescapedDirs.map((i) => `'${i}'`);
 
     // get ready
     const rip = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');

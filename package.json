@@ -93,6 +93,7 @@
     "trailingComma": "es5"
   },
   "dependencies": {
+    "event-stream": "3.3.5",
     "lodash": "^4.17.5"
   }
 }
