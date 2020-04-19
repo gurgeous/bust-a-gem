@@ -1,7 +1,7 @@
 {
   "name": "bust-a-gem",
   "displayName": "Bust A Gem",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "gurgeous",
   "description": "Go to Definition for Ruby, and quickly open gems.",
   "icon": "images/icon.png",
@@ -15,7 +15,7 @@
     "url": "https://github.com/gurgeous/bust-a-gem.git"
   },
   "engines": {
-    "vscode": "^1.21.0"
+    "vscode": "^1.44.0"
   },
   "keywords": [
     "bundler",
@@ -25,22 +25,22 @@
     "ruby"
   ],
   "categories": [
-    "Languages"
+    "Programming Languages"
   ],
   "activationEvents": [
-    "onCommand:extension.open",
-    "onCommand:extension.rebuild",
+    "onCommand:bust-a-gem.open",
+    "onCommand:bust-a-gem.rebuild",
     "onLanguage:ruby"
   ],
-  "main": "./out/extension",
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.open",
+        "command": "bust-a-gem.open",
         "title": "Bust-A-Gem: Open Gem..."
       },
       {
-        "command": "extension.rebuild",
+        "command": "bust-a-gem.rebuild",
         "title": "Bust-A-Gem: Rebuild Tags"
       }
     ],
@@ -68,31 +68,32 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "lint": "eslint src --ext ts",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    "pretest": "yarn run compile && yarn run lint",
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "yarn run compile"
   },
   "devDependencies": {
-    "@types/fs-extra": "^5.0.1",
-    "@types/lodash": "^4.14.105",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^7.0.43",
-    "@types/sinon": "^4.3.0",
-    "eslint": "^4.19.0",
-    "eslint-plugin-mocha": "^4.12.1",
-    "sinon": "^4.4.6",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.21"
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.0",
+    "@types/sinon": "^9.0.0",
+    "@types/vscode": "^1.44.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-mocha": "^6.3.0",
+    "glob": "^7.1.6",
+    "mocha": "^7.1.1",
+    "sinon": "^9.0.0",
+    "typescript": "^3.8.3",
+    "vscode-test": "^1.3.0"
   },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "dependencies": {
-    "lodash": "^4.17.5"
   }
 }

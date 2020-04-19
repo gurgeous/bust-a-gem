@@ -1,5 +1,4 @@
 import * as child_process from 'child_process';
-import * as _ from 'lodash';
 
 //
 // quiet - only used for test
@@ -24,13 +23,13 @@ export const exec = (command: string, options: child_process.ExecOptions): Promi
       }
     }
 
-    const tm = _.now();
+    const tm = Date.now();
     child_process.exec(command, options, (error, stdout, stderr) => {
       if (error) {
         reject(error);
       } else {
         if (!isQuiet()) {
-          console.log(`success, ${_.now() - tm}ms`);
+          console.log(`success, ${Date.now() - tm}ms`);
         }
         resolve(stdout);
       }
