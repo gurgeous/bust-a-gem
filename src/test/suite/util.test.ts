@@ -1,9 +1,9 @@
 import * as assert from 'assert';
-import * as testHelpers from './testHelpers';
-import * as util from '../util';
+import * as util from '../../util';
+import * as testHelpers from '../testHelpers';
 
-describe('Util', () => {
-  it('exec', async () => {
+suite('Util', () => {
+  test('exec', async () => {
     // success
     const stdout = await util.exec('echo hello', {});
     assert.equal(stdout, 'hello\n');

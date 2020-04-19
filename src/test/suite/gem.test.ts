@@ -1,16 +1,12 @@
-import { Gem } from '../gem';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import * as testHelpers from './testHelpers';
-import * as util from '../util';
+import { Gem } from '../../gem';
+import * as util from '../../util';
+import * as testHelpers from '../testHelpers';
 
-describe('Gem', () => {
-  let sandbox: sinon.SinonSandbox;
-  beforeEach(() => (sandbox = sinon.sandbox.create()));
-  afterEach(() => sandbox.restore());
-
-  it('lists gems', async () => {
-    testHelpers.stubGemList(sandbox);
+suite('Gem', () => {
+  test('lists gems', async () => {
+    testHelpers.stubGemList(sinon);
 
     const gems = await Gem.list();
     assert.equal(gems.length, 3);
@@ -20,8 +16,8 @@ describe('Gem', () => {
     assert.equal(gem.label, 'awesome_print-1.8.0');
   });
 
-  it('fails on invalid gem lists', async () => {
-    const stub = sandbox.stub(util, 'exec');
+  test('fails on invalid gem lists', async () => {
+    const stub = sinon.stub(util, 'exec');
 
     stub.resolves('');
     testHelpers.assertThrowsAsync(async () => {

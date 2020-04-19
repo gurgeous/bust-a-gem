@@ -28,7 +28,7 @@ export class Etags {
     if (!list) {
       return [];
     }
-    return list.map(tag => {
+    return list.map((tag) => {
       let file = tag.file;
       if (!file.startsWith('/')) {
         file = path.join(base, file);
@@ -108,7 +108,7 @@ export class Etags {
       };
 
       lineReader
-        .on('line', line => {
+        .on('line', (line) => {
           try {
             onLine(line);
           } catch (error) {

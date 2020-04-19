@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as util from './util';
 
 //
@@ -17,11 +16,11 @@ export class NoWhine {
 
   // should we bail early because an error occurred recently?
   tooSoon() {
-    return _.now() - this.errorAt < util.seconds(10);
+    return Date.now() - this.errorAt < util.seconds(10);
   }
 
   // note that an install error occurred
   onError() {
-    this.errorAt = _.now();
+    this.errorAt = Date.now();
   }
 }

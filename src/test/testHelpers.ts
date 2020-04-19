@@ -3,16 +3,21 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sinon from 'sinon';
-import * as util from '../util';
 import * as vscode from 'vscode';
+import * as util from '../util';
 
 //
 // this hook runs before everything
 //
 
-before(() => {
+setup(() => {
   // turn off command logging
   util.setQuiet();
+});
+
+teardown(() => {
+  // Restore the default sandbox here
+  sinon.restore();
 });
 
 // assert.throws for async functions
