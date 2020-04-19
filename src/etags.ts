@@ -14,16 +14,16 @@ const HEADER_RE = /^\x0c/;
 const TAG_RE = /^([^\x7f]+)\x7f([^\x01]+)\x01([^,]+)/;
 
 export class Etags {
-  readonly filename: string;
+  readonly file: string;
   readonly tags = new Map<string, Tag[]>();
 
   constructor(file: string) {
-    this.filename = file;
+    this.file = file;
   }
 
   // Run a query by looking up key in tags.
   provideDefinition(key: string): vscode.Location[] {
-    const base = path.dirname(this.filename);
+    const base = path.dirname(this.file);
     const list = this.tags.get(key);
     if (!list) {
       return [];
@@ -58,7 +58,7 @@ export class Etags {
     let header: Header;
 
     return new Promise((resolve, reject) => {
-      const input = fs.createReadStream(this.filename, { encoding: 'utf8' });
+      const input = fs.createReadStream(this.file, { encoding: 'utf8' });
       input.on('error', (error: Error) => {
         reject(error);
       });
@@ -70,7 +70,7 @@ export class Etags {
             if (HEADER_RE.exec(line)) {
               state = STATE_HEADER;
             } else {
-              throw new Error(`${this.filename} isn't an etags file. I can't parse it.`);
+              throw new Error(`${this.file} isn't an etags file. I can't parse it.`);
             }
             break;
           }
@@ -93,7 +93,7 @@ export class Etags {
                 state = STATE_HEADER;
                 return;
               }
-              throw new Error(`while reading ${this.filename}, couldn't parse line '${line}'.`);
+              throw new Error(`while reading ${this.file}, couldn't parse line '${line}'.`);
             }
 
             // now append the tag
