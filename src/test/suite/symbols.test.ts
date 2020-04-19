@@ -1,10 +1,10 @@
-import { Symbols } from '../symbols';
 import * as assert from 'assert';
-import * as testHelpers from './testHelpers';
 import * as vscode from 'vscode';
+import { Symbols } from '../../symbols';
+import * as testHelpers from '../testHelpers';
 
-describe('Symbols', () => {
-  it('finds symbols', async () => {
+suite('Symbols', () => {
+  test('finds symbols', async () => {
     // Create fake document. Saves 100ms vs calling openDocument.
     const document = <vscode.TextDocument>{
       getText: () => testHelpers.readFixture('something.rb'),
@@ -13,7 +13,7 @@ describe('Symbols', () => {
 
     let symbols = new Symbols();
     const list = await symbols.provideDocumentSymbols(document, <vscode.CancellationToken>{});
-    const names = list.map(i => i.name);
+    const names = list.map((i) => i.name);
     assert.deepEqual(names, [
       'Hello',
       'World',

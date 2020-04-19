@@ -1,12 +1,11 @@
-import { GoTo } from '../goTo';
 import * as assert from 'assert';
 import * as path from 'path';
 import * as sinon from 'sinon';
-import * as testHelpers from './testHelpers';
 import * as vscode from 'vscode';
+import { GoTo } from '../../goTo';
+import * as testHelpers from '../testHelpers';
 
-describe('Go To Definition', () => {
-  let sandbox: sinon.SinonSandbox;
+suite('Go To Definition', () => {
   let document: vscode.TextDocument;
   const rootPath = <string>vscode.workspace.rootPath;
 
@@ -14,7 +13,7 @@ describe('Go To Definition', () => {
   // hooks
   //
 
-  before(async () => {
+  suiteSetup(async () => {
     // open something.rb as our document
     const something = path.join(rootPath, 'something.rb');
     document = await vscode.workspace.openTextDocument(something);
@@ -23,26 +22,23 @@ describe('Go To Definition', () => {
   let exec: sinon.SinonStub;
   let goTo: GoTo;
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-
-    // stub exec for sandbox & ripper-tags
-    exec = testHelpers.stubGemList(sandbox);
-    testHelpers.stubRipperTags(sandbox, exec);
+  setup(() => {
+    // stub exec for sinon & ripper-tags
+    exec = testHelpers.stubGemList(sinon);
+    testHelpers.stubRipperTags(sinon, exec);
 
     goTo = new GoTo();
   });
-  afterEach(() => sandbox.restore());
 
   //
   // tests
   //
 
-  it('provides definitions', async () => {
+  test('provides definitions', async () => {
     const checkDefinition = async (callSite: RegExp, defSite: RegExp) => {
       const lines = document.getText().split('\n');
-      const callLineIndex = lines.findIndex(i => i.match(callSite) !== null);
-      const defLineIndex = lines.findIndex(i => i.match(defSite) !== null);
+      const callLineIndex = lines.findIndex((i) => i.match(callSite) !== null);
+      const defLineIndex = lines.findIndex((i) => i.match(defSite) !== null);
 
       // assume offset 9 at call site
       // 01234567890
@@ -58,8 +54,8 @@ describe('Go To Definition', () => {
     await checkDefinition(/^\s+p Hello::World/, /^\s+class World/);
   });
 
-  it('tries to rip', async () => {
-    testHelpers.stubTagsNotExist(sandbox);
+  test('tries to rip', async () => {
+    testHelpers.stubTagsNotExist(sinon);
 
     // go
     await goTo.provideDefinition0('gub');
@@ -70,7 +66,7 @@ describe('Go To Definition', () => {
     assert.equal(args[1].cwd, rootPath);
   });
 
-  it('guards against reentrant', async () => {
+  test('guards against reentrant', async () => {
     // this resolves after 5ms
     goTo.guard(null, () => {
       return new Promise((resolve, reject) => setTimeout(resolve, 5));
@@ -82,9 +78,9 @@ describe('Go To Definition', () => {
     assert(neverRan);
   });
 
-  it('displays errors', async () => {
+  test('displays errors', async () => {
     // eat messages
-    const showErrorMessage = sandbox.stub(vscode.window, 'showErrorMessage');
+    const showErrorMessage = sinon.stub(vscode.window, 'showErrorMessage');
     await goTo.guard(null, async () => {
       throw new Error('whatever');
     });
@@ -97,9 +93,9 @@ describe('Go To Definition', () => {
     assert(showErrorMessage.secondCall.args[0].includes('[Installation]'));
   });
 
-  it('dirsToRip resolves gems', async () => {
+  test('dirsToRip resolves gems', async () => {
     // eat messages
-    const showWarningMessage = sandbox.stub(vscode.window, 'showWarningMessage');
+    const showWarningMessage = sinon.stub(vscode.window, 'showWarningMessage');
 
     let dirs;
 
