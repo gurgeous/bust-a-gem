@@ -81,6 +81,7 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 #### 0.1.8 - Apr 2020
 
 - Update dependencies
+- #15 Strip leading colons from queries (thanks @KamilMilewski)
 
 #### 0.1.7 - Nov 2018
 
