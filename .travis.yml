@@ -15,8 +15,6 @@ script:
   - |
     echo ">>> yarn install"
     yarn install
-    echo ">>> yarn pretest"
-    yarn pretest
     echo ">>> yarn test"
     yarn test
     echo ">>> Done!"
