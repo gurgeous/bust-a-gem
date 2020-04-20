@@ -1,11 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as util from './util';
 import * as vscode from 'vscode';
-
 import { Etags } from './etags';
-import { NoWhine } from './noWhine';
 import { Gem } from './gem';
+import { NoWhine } from './noWhine';
+import * as util from './util';
 
 //
 // This class handles Go to Definition and Rebuild.
@@ -78,8 +77,12 @@ export class GoTo implements vscode.DefinitionProvider {
 
     return await this.guard([], async () => {
       // similar to standard Ruby wordPattern, but allow :
-      const wordPattern = /(:?[A-Za-z][^-`~@#%^&()=+[{}|;'",<>/.*\]\s\\!?]*[!?]?)/;
-      const query = document.getText(document.getWordRangeAtPosition(position, wordPattern));
+      const wordPattern = /(:*[A-Za-z][^-`~@#%^&()=+[{}|;'",<>/.*\]\s\\!?]*[!?]?)/;
+      var query = document.getText(document.getWordRangeAtPosition(position, wordPattern));
+
+      // strip leading colons
+      query = query.replace(/^:+/, '');
+
       return await this.provideDefinition0(query);
     });
   };
@@ -134,7 +137,7 @@ export class GoTo implements vscode.DefinitionProvider {
   rip = async (failSilently: boolean) => {
     // get dirs to rip from config
     const unescapedDirs = await this.dirsToRip();
-    const dirs = unescapedDirs.map(i => `'${i}'`);
+    const dirs = unescapedDirs.map((i) => `'${i}'`);
 
     // get ready
     const rip = <string>vscode.workspace.getConfiguration('bustagem.cmd').get('rip');

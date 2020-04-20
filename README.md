@@ -76,13 +76,13 @@ Feel free to open issues or PRs! We welcome all contributions, even from beginne
 1.  Make a code change and test it using F5 / Start Debugging. This is not hard, see the doc links above.
 1.  Create a branch and submit a PR!
 
-Sidenote - want to test in the terminal? You'll have to set an environment variable when running npm test, see below. I generally prefer to use F5 in vscode, which works without any fiddling.
-
-`CODE_TESTS_WORKSPACE=./src/test/fixtures npm test`
-
 ## Changelog
 
-#### 0.1.7 - Nov 12, 2018
+#### 0.1.8 - Apr 2020
+
+- Update dependencies
+
+#### 0.1.7 - Nov 2018
 
 - #5 use specific SymbolKind for each symbol (thanks @feber)
 
