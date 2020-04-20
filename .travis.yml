@@ -1,11 +1,3 @@
-# amd: added these two
-env:
-  - CODE_TESTS_WORKSPACE=$TRAVIS_BUILD_DIR/src/test/fixtures
-
-#
-# boilerplate https://code.visualstudio.com/api/working-with-extensions/continuous-integration
-#
-
 language: node_js
 os:
   - osx
