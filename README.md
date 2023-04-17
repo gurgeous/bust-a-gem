@@ -41,11 +41,21 @@ The first time you use **"Go to Definition"**, Bust A Gem will use ripper-tags t
 
 Bust A Gem initially just indexes your project. You can also index some of your gem dependencies, which makes it possible to use Go to Definition to jump into a gem. See [Settings](#settings).
 
-Bust A Gem doesn't rebuild TAGS automatically. Use the **"Rebuild"** command to rebuild the TAGS File. You'll want to do this periodically as you work on your project, or after change the `bustagem.gems` setting.
+Bust A Gem doesn't rebuild TAGS automatically. Use the **"Rebuild"** command to rebuild the TAGS File. You'll want to do this periodically as you work on your project, or after a change to Bust A Gem settings.
 
 ## Settings
 
-You probably want to set `bustagem.gems`. Initially, Bust A Gem will only index your project. Add gem names to `bustagem.gems` to instruct Bust A Gem to add some of your gems to the TAGS file. Bust A Gem uses bundler and your Gemfile to find those gems. Don't forget to run **"Rebuild"** to rebuild the TAGS file!
+Initially, Bust A Gem will only index files in your workspace. Add gem names to `bustagem.gems` to instruct Bust A Gem to add some of your gems to the TAGS file. Bust A Gem uses bundler and your Gemfile to find those gems. Don't forget to run **"Rebuild"** to rebuild the TAGS file!
+
+For advanced usage, skip `bustagem.gems` and set `bustagem.cmd.rip` to rip the gems you want. This is a better choice if you use multiple workspaces. For example, to rip all gems from your Gemfile:
+
+`ripper-tags -f TAGS -R --force --extra=q $(bundle show --paths)`
+
+Or a subset (if present):
+
+`ripper-tags -f TAGS -R --force --extra=q $(bundle show --paths | grep -E "(activeadmin|shopify|webflow)")`
+
+See [#18](https://github.com/gurgeous/bust-a-gem/issues/18) for details.
 
 | Settings            | Example                             | Notes                                    |
 | ------------------- | ----------------------------------- | ---------------------------------------- |
