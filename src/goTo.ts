@@ -148,9 +148,7 @@ export class GoTo implements vscode.DefinitionProvider {
       title: 'Bust-A-Gem ripping...',
     };
 
-    await vscode.window.withProgress(progressOptions, async () => {
-      await util.exec(cmd, { cwd: this.rootPath });
-    });
+    vscode.window.withProgress(progressOptions, () => util.exec(cmd, { cwd: this.rootPath }));
   };
 
   //
